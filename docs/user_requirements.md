@@ -2,8 +2,6 @@
 
 ## **User Needs** - Problem statements from user perspective ("As a user, I need...")
 
-## **User Scenarios/Journeys** - Narrative descriptions of how users will interact with the product
-
 ### Now
 
 1. As a user, I want streamlined authentication options, including
@@ -145,6 +143,8 @@
     I can help them discover quality recipes.
 23. As a privacy-conscious user, I want to manage my notification
     preferences so that I control what communications I receive.
+
+## **User Scenarios/Journeys** - Narrative descriptions of how users will interact with the product
 
 ## **Functional Requirements** - Features and capabilities organized by user priorities
 
