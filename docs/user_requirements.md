@@ -6,9 +6,9 @@
 
 ### Now
 
-1. As a new user, I want to create an account with basic information
-   (email, username, password) so that I can access personalized
-   features.
+1. As a user, I want streamlined authentication options, including
+   one-time codes or social logins (Google/Facebook/Apple), to minimize
+   friction during signup and login.
 2. As a registered user, I want to log in to my account so that I can
    access my saved recipes and preferences.
 3. As a user, I want to reset my password if I forget it so that I can
