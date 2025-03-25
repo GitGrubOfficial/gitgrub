@@ -9,6 +9,8 @@ graph TB
     Version["Version"]
     Authentication["Authentication"]
     UnitConversion["UnitConversion"]
+    SessionPreference["SessionPreference"]
+    SessionPreference["SessionPreference"]
     
     %% Attributes - Ovals
     %% User attributes
@@ -30,7 +32,8 @@ graph TB
     Ingredient --- ingredientId(["ingredientId"])
     Ingredient --- ingredientName(["name"])
     Ingredient --- quantity(["quantity"])
-    Ingredient --- unit(["unit"])
+    Ingredient --- metricUnit(["metricUnit"])
+    Ingredient --- displayUnit(["*displayUnit*"])
     Ingredient --- weightEquivalent(["weightEquivalent"])
     
     %% Instruction attributes
@@ -60,6 +63,12 @@ graph TB
     UnitConversion --- toUnit(["toUnit"])
     UnitConversion --- conversionFactor(["conversionFactor"])
     
+    %% SessionPreference attributes
+    SessionPreference --- sessionId(["sessionId"])
+    SessionPreference --- tempUnitPreference(["tempUnitPreference"])
+    SessionPreference --- expirationTime(["expirationTime"])
+
+    
     %% Relationships - Diamonds with cardinality
     User === |"1"| MANAGES{{"MANAGES"}} === |"N"| Recipe
     Recipe === |"1"| REQUIRES{{"REQUIRES"}} === |"N"| Ingredient
@@ -70,6 +79,8 @@ graph TB
     Recipe === |"1"| HAS_VERSION{{"HAS_VERSION"}} === |"N"| Version
     User === |"1"| HAS_AUTH{{"HAS_AUTH"}} === |"N"| Authentication
     Ingredient === |"M"| CONVERTS_TO{{"CONVERTS_TO"}} === |"N"| UnitConversion
+    User === |"1"| HAS_TEMP_PREF{{"HAS_TEMP_PREF"}} === |"N"| SessionPreference
+    Recipe === |"1"| HAS_SESSION{{"HAS_SESSION"}} === |"N"| SessionPreference
     
     %% Styling
     classDef entity fill:#E3F2FD,stroke:#1565C0,stroke-width:2px
@@ -78,9 +89,9 @@ graph TB
     classDef keyAttribute fill:#FFF3E0,stroke:#EF6C00,stroke-width:1px,text-decoration:underline
     classDef relationship fill:#E8F5E9,stroke:#2E7D32
     
-    class User,Recipe,Ingredient,Tag,Version,Authentication,UnitConversion entity
+    class User,Recipe,Ingredient,Tag,Version,Authentication,UnitConversion,SessionPreference entity
     class Instruction weakEntity
-    class recipeDate,userName,userEmail,userPhone,quantity,recipeTitle,stepText,tagName,tagCategory,ingredientName,unit,weightEquivalent,servingSize,isPublic,preferredUnits,passwordHash,versionNumber,versionDate,changeDescription,provider,externalId,lastLogin,fromUnit,toUnit,conversionFactor attribute
+    class recipeDate,userName,userEmail,userPhone,quantity,recipeTitle,stepText,tagName,tagCategory,ingredientName,unit,weightEquivalent,servingSize,isPublic,preferredUnits,passwordHash,versionNumber,versionDate,changeDescription,provider,externalId,lastLogin,fromUnit,toUnit,conversionFactor,sessionId,tempUnitPreference,expirationTime attribute
     class recipeId,ingredientId,userId,tagId,stepNumber,versionId,authId,conversionId keyAttribute
-    class MANAGES,REQUIRES,CONSISTS_OF,HAS_TAG,HAS_TAG2,FORKED_FROM,HAS_VERSION,HAS_AUTH,CONVERTS_TO relationship
+    class MANAGES,REQUIRES,CONSISTS_OF,HAS_TAG,HAS_TAG2,FORKED_FROM,HAS_VERSION,HAS_AUTH,CONVERTS_TO,HAS_TEMP_PREF,HAS_SESSION relationship
 ```
