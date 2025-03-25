@@ -73,7 +73,7 @@ graph TD
     Recipe === |"1"| CONSISTS_OF{{"CONSISTS_OF"}} === |"N"| Instruction
     Recipe === |"M"| HAS_TAG{{"HAS_TAG"}} === |"N"| Tag
     Ingredient === |"M"| HAS_TAG2{{"HAS_TAG"}} === |"N"| Tag
-    Recipe === |"0"| FORKED_FROM{{"FORKED_FROM"}} === |"0..1"| Recipe
+    Recipe === |"0"| FORKED_FROM{{"FORKED_FROM"}}
     Recipe === |"1"| HAS_VERSION{{"HAS_VERSION"}} === |"N"| Version
     User === |"1"| HAS_AUTH{{"HAS_AUTH"}} === |"N"| Authentication
     Ingredient === |"M"| CONVERTS_TO{{"CONVERTS_TO"}} === |"N"| UnitConversion
