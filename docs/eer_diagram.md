@@ -64,7 +64,6 @@ graph TB
     UnitConversion --- conversionFactor(["conversionFactor"])
     
     %% SessionPreference attributes
-    SessionPreference --- sessionId(["sessionId"])
     SessionPreference --- tempUnitPreference(["tempUnitPreference"])
     SessionPreference --- expirationTime(["expirationTime"])
 
@@ -88,10 +87,12 @@ graph TB
     classDef attribute fill:#FFF3E0,stroke:#EF6C00,stroke-width:1px
     classDef keyAttribute fill:#FFF3E0,stroke:#EF6C00,stroke-width:1px,text-decoration:underline
     classDef relationship fill:#E8F5E9,stroke:#2E7D32
+    classDef identifyingRelationship fill:#E8F5E9,stroke:#2E7D32,stroke-width:2px,stroke-dasharray:5
     
-    class User,Recipe,Ingredient,Tag,Version,Authentication,UnitConversion,SessionPreference entity
-    class Instruction weakEntity
-    class recipeDate,userName,userEmail,userPhone,quantity,recipeTitle,stepText,tagName,tagCategory,ingredientName,unit,weightEquivalent,servingSize,isPublic,preferredUnits,passwordHash,versionNumber,versionDate,changeDescription,provider,externalId,lastLogin,fromUnit,toUnit,conversionFactor,sessionId,tempUnitPreference,expirationTime attribute
+    class User,Recipe,Ingredient,Tag,Version,Authentication,UnitConversion entity
+    class Instruction,SessionPreference weakEntity
+    class recipeDate,userName,userEmail,userPhone,quantity,recipeTitle,stepText,tagName,tagCategory,ingredientName,unit,weightEquivalent,servingSize,isPublic,preferredUnits,passwordHash,versionNumber,versionDate,changeDescription,provider,externalId,lastLogin,fromUnit,toUnit,conversionFactor,tempUnitPreference,expirationTime attribute
     class recipeId,ingredientId,userId,tagId,stepNumber,versionId,authId,conversionId keyAttribute
-    class MANAGES,REQUIRES,CONSISTS_OF,HAS_TAG,HAS_TAG2,FORKED_FROM,HAS_VERSION,HAS_AUTH,CONVERTS_TO,HAS_TEMP_PREF,HAS_SESSION relationship
+    class MANAGES,REQUIRES,CONSISTS_OF,HAS_TAG,HAS_TAG2,FORKED_FROM,HAS_VERSION,HAS_AUTH,CONVERTS_TO relationship
+    class HAS_TEMP_PREF,HAS_SESSION identifyingRelationship
 ```
