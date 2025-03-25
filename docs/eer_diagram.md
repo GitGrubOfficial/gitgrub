@@ -1,5 +1,5 @@
 ```mermaid
-graph TB
+graph TD
     %% Core Entities - Rectangles
     User["User"]
     Recipe["Recipe"]
@@ -9,7 +9,6 @@ graph TB
     Version["Version"]
     Authentication["Authentication"]
     UnitConversion["UnitConversion"]
-    SessionPreference["SessionPreference"]
     SessionPreference["SessionPreference"]
     
     %% Attributes - Ovals
@@ -91,8 +90,8 @@ graph TB
     
     class User,Recipe,Ingredient,Tag,Version,Authentication,UnitConversion entity
     class Instruction,SessionPreference weakEntity
-    class recipeDate,userName,userEmail,userPhone,quantity,recipeTitle,stepText,tagName,tagCategory,ingredientName,unit,weightEquivalent,servingSize,isPublic,preferredUnits,passwordHash,versionNumber,versionDate,changeDescription,provider,externalId,lastLogin,fromUnit,toUnit,conversionFactor,tempUnitPreference,expirationTime attribute
+    class recipeDate,userName,userEmail,userPhone,quantity,recipeTitle,stepText,tagName,tagCategory,ingredientName,unit,weightEquivalent,servingSize,isPublic,preferredUnits,passwordHash,versionNumber,versionDate,changeDescription,provider,externalId,lastLogin,fromUnit,toUnit,conversionFactor,tempUnitPreference,expirationTime,metricUnit,displayUnit attribute
     class recipeId,ingredientId,userId,tagId,stepNumber,versionId,authId,conversionId keyAttribute
     class MANAGES,REQUIRES,CONSISTS_OF,HAS_TAG,HAS_TAG2,FORKED_FROM,HAS_VERSION,HAS_AUTH,CONVERTS_TO relationship
-    class HAS_TEMP_PREF,HAS_SESSION identifyingRelationship
+    class ,HAS_TEMP_PREF,HAS_SESSION identifyingRelationship
 ```
