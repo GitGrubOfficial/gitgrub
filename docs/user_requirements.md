@@ -33,6 +33,10 @@
     origin.
 12. As a precise baker, I want to convert volume measurements to weight
     so that I can achieve more consistent results.
+13. As a user, I want to set my preferred measurement units
+    (metric/imperial) at the profile level, which will be applied as the
+    default for all recipes I view, while still having the option to
+    toggle between unit systems for any individual recipe as needed.
 
 ### Next
 
