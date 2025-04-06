@@ -1,0 +1,15 @@
+[tool.isort]
+profile = "black"
+line_length = 88
+multi_line_output = 3
+include_trailing_comma = true
+known_first_party = ["recipes"]  # this is where django app name go
+
+[tool.ruff]
+line-length = 88
+ignore = ["E501"]
+exclude = ["migrations", ".venv", "env", "__pycache__"]
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "I"]  # E=pycodestyle, F=pyflakes, I=import sorting (isort)
