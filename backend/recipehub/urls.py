@@ -37,12 +37,12 @@ urlpatterns = [
     path("auth/", include("dj_rest_auth.urls")),
     path("auth/registration/", include("dj_rest_auth.registration.urls")),
 
-    # ✅ JWT Endpoints (manually added from simplejwt)
+    #JWT Endpoints (manually added from simplejwt)
     path("auth/jwt/create/", TokenObtainPairView.as_view(), name="token_obtain_pair"),
     path("auth/jwt/refresh/", TokenRefreshView.as_view(), name="token_refresh"),
     path("auth/jwt/verify/", TokenVerifyView.as_view(), name="token_verify"),
 
-    # Optional: social login support
+    # Optional: social login support, will implement later
     path("auth/social/", include("allauth.socialaccount.urls")),
 
 

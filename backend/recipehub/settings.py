@@ -100,7 +100,7 @@ DATABASES = {
         'NAME': 'recipehub',
         'USER': 'user',
         'PASSWORD': 'password',
-        'HOST': 'db',  # ✅ should match your docker-compose service name
+        'HOST': 'db',  # match with docker-compose service name
         'PORT': '3306',
     }
 }
