@@ -7,3 +7,10 @@ GitPython==3.1.40
 ruff
 isort
 django-cors-headers==4.7.0
+requests
+cryptography
+dj-rest-auth
+django-allauth
+PyJWT
+djangorestframework-simplejwt
+djangorestframework-simplejwt

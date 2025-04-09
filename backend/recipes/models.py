@@ -1,18 +1,10 @@
 from django.db import models
-
-
-# Create your models here.
-class RecipeOwner(models.Model):
-    username = models.CharField(max_length=100, unique=True)
-
-    def __str__(self):
-        return self.username
-
+from django.conf import settings
 
 # I'll might use the git_commit_hash for git tracking
 class Recipe(models.Model):
     owner = models.ForeignKey(
-        RecipeOwner,
+        settings.AUTH_USER_MODEL,
         on_delete=models.SET_NULL,
         null=True, blank=True,
         related_name='recipes')
@@ -30,7 +22,7 @@ class Recipe(models.Model):
         related_name='forks'
     )
     original_author = models.ForeignKey(
-        RecipeOwner,
+        settings.AUTH_USER_MODEL,
         null=True,
         blank=True,
         on_delete=models.SET_NULL,
