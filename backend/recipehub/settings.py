@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     "dj_rest_auth.registration",
 
     #add social login
+    'django.contrib.sites',
     "allauth",
     "allauth.account",
     "allauth.socialaccount",
@@ -56,6 +57,9 @@ INSTALLED_APPS = [
     "users",
 ]
 
+INSTALLED_APPS += ['django_extensions']
+
+SITE_ID = 1
 MIDDLEWARE = [
     "corsheaders.middleware.CorsMiddleware",
     "django.middleware.security.SecurityMiddleware",
@@ -171,7 +175,16 @@ SIMPLE_JWT = {
 
 # For Google login
 SITE_ID = 1
+
+ACCOUNT_USER_MODEL_USERNAME_FIELD = None
+ACCOUNT_USERNAME_REQUIRED = False
+ACCOUNT_AUTHENTICATION_METHOD = "email"
 ACCOUNT_EMAIL_VERIFICATION = "none"
-ACCOUNT_AUTHENTICATION_METHOD = "username"
-ACCOUNT_EMAIL_REQUIRED = False
+ACCOUNT_EMAIL_REQUIRED = True
+
+REST_AUTH_REGISTER_SERIALIZERS = {
+    'REGISTER_SERIALIZER': 'users.serializers.CustomRegisterSerializer',
+}
+
+
 

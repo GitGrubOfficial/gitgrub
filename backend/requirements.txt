@@ -13,4 +13,6 @@ dj-rest-auth
 django-allauth
 PyJWT
 djangorestframework-simplejwt
-djangorestframework-simplejwt
+rest_framework_simplejwt
+dj-rest-auth[with_social]
+django-extensions

@@ -169,3 +169,12 @@ cython_debug/
 
 # PyPI configuration file
 .pypirc
+
+
+
+backend/recipe_git_repo/
+recipe_git_repo/
+.recipe_git_repo/
+
+.idea/
+.idea
