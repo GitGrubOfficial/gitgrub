@@ -22,7 +22,6 @@ from rest_framework_simplejwt.views import (
     TokenRefreshView,
     TokenVerifyView,
 )
-from users.views import CustomRegisterView
 '''
 username: admin
 email: admin@gitgrub
@@ -31,10 +30,11 @@ pass: Abcd1234
 
 urlpatterns = [
     path("admin/", admin.site.urls),
+
+    #recipe operations
     path("api/", include("recipes.urls")),
 
     # Auth with dj-rest-auth
-    path("api/auth/registration/", CustomRegisterView.as_view(), name="rest_register"),
     path("api/auth/", include("dj_rest_auth.urls")),
 
     path("api/auth/jwt/create/", TokenObtainPairView.as_view(), name="token_obtain_pair"),
@@ -44,6 +44,6 @@ urlpatterns = [
     # Optional: social login support, will implement later
     path("auth/social/", include("allauth.socialaccount.urls")),
 
-
-
+    #user operations
+    path("api/", include("users.user_urls")),
 ]
