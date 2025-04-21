@@ -15,6 +15,18 @@ services:
       - db
     ports:
       - "8000:8000"
+  frontend:
+    build:
+      context: ../frontend
+    container_name: react_frontend
+    ports:
+      - "3000:3000"
+    volumes:
+      - ../frontend:/app
+    env_file:
+      - ../frontend/.env
+    stdin_open: true
+    tty: true
 
   db:
     image: mysql:8.0

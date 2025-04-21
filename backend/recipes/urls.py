@@ -9,7 +9,7 @@ from .views.recipe_git_views.recipe_diff import RecipeDiffView
 urlpatterns = [
     path("recipes/", RecipeListView.as_view()),          # GET (list)
     path("recipes/create/", RecipeCreateView.as_view()), # POST (create)
-    path("recipes/<int:pk>/", RecipeDetailView.as_view()),# GET (single pull)
-    path("recipes/<int:pk>/update/", RecipeUpdateView.as_view()), # PATCH to update+
+    path("recipes/<int:pk>/", RecipeDetailView.as_view(), name="recipe-detail"),# GET (single pull)
+    path("recipes/<int:pk>/update/", RecipeUpdateView.as_view(), name="recipe-update"), # PATCH to update+
     path("recipes/<int:pk>/diff/", RecipeDiffView.as_view())
 ]

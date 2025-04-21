@@ -15,5 +15,6 @@ class RecipeSerializer(serializers.ModelSerializer):
             'forked_from',
             'original_author',
             'git_commit_hash',
+            'visibility',
         ]
-        read_only_fields = ['git_commit_hash']
+        read_only_fields = ['owner', 'original_author', 'git_commit_hash']

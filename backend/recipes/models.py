@@ -3,11 +3,17 @@ from django.conf import settings
 
 # I'll might use the git_commit_hash for git tracking
 class Recipe(models.Model):
+    VISIBILITY_CHOICES = [
+        ('public', 'Public'),
+        ('private', 'Private'),
+    ]
+
     owner = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.SET_NULL,
         null=True, blank=True,
-        related_name='recipes')
+        related_name='recipes'
+    )
     title = models.CharField(max_length=255)
     ingredients = models.TextField()
     instructions = models.TextField()
@@ -28,6 +34,11 @@ class Recipe(models.Model):
         on_delete=models.SET_NULL,
         related_name='original_recipes'
     )
+    visibility = models.CharField(
+        max_length=10,
+        choices=VISIBILITY_CHOICES,
+        default='private'
+    )
 
     def __str__(self):
-        return f"{self.title} by {self.owner.username}"
+        return f"{self.title} by {self.owner.email}"
