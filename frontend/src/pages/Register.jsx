@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import axios from 'axios';
+import axiosInstance from '../api/axiosInstance';
 import { useNavigate } from 'react-router-dom';
-import { Link} from "react-router-dom";
+import { Link } from 'react-router-dom';
 
 function Register() {
   const [email, setEmail] = useState('');
@@ -13,12 +13,11 @@ function Register() {
   const handleRegister = async (e) => {
     e.preventDefault();
     try {
-        await axios.post('/api/auth/registration/', {
-          email,
-          password1,
-          password2,
-        });
-
+      await axiosInstance.post('/api/auth/registration/', {
+        email,
+        password1,
+        password2,
+      });
       navigate('/login');
     } catch (err) {
       console.error(err);
@@ -32,27 +31,61 @@ function Register() {
   };
 
   return (
-    <div style={{ maxWidth: '400px', margin: 'auto' }}>
-      <h2>Register</h2>
-      {errorMsg && <p style={{ color: 'red' }}>{errorMsg}</p>}
-      <form onSubmit={handleRegister}>
-        <div>
-          <label>Email:</label>
-          <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
-        </div>
-        <div>
-          <label>Password:</label>
-          <input type="password" value={password1} onChange={(e) => setPassword1(e.target.value)} required />
-        </div>
-        <div>
-          <label>Confirm Password:</label>
-          <input type="password" value={password2} onChange={(e) => setPassword2(e.target.value)} required />
-        </div><p>Already have an account? <Link to="/login">Login here</Link></p>
+    <div className="flex items-center justify-center min-h-screen bg-gray-100">
+      <div className="bg-white shadow-md rounded px-10 py-8 max-w-md w-full">
+        <h2 className="text-2xl font-bold mb-6 text-center text-indigo-600">Register for GitGrubHub</h2>
 
-        <button style={{ marginTop: '1rem' }} type="submit">
-          Register
-        </button>
-      </form>
+        {errorMsg && <p className="text-red-500 mb-4 text-sm text-center">{errorMsg}</p>}
+
+        <form onSubmit={handleRegister} className="space-y-4">
+          <div>
+            <label className="block text-gray-700">Email</label>
+            <input
+              type="email"
+              className="w-full px-4 py-2 mt-1 border rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-400"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+          </div>
+
+          <div>
+            <label className="block text-gray-700">Password</label>
+            <input
+              type="password"
+              className="w-full px-4 py-2 mt-1 border rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-400"
+              value={password1}
+              onChange={(e) => setPassword1(e.target.value)}
+              required
+            />
+          </div>
+
+          <div>
+            <label className="block text-gray-700">Confirm Password</label>
+            <input
+              type="password"
+              className="w-full px-4 py-2 mt-1 border rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-400"
+              value={password2}
+              onChange={(e) => setPassword2(e.target.value)}
+              required
+            />
+          </div>
+
+          <button
+            type="submit"
+            className="w-full bg-indigo-600 text-white py-2 rounded hover:bg-indigo-700 transition"
+          >
+            Register
+          </button>
+        </form>
+
+        <p className="mt-4 text-sm text-center text-gray-600">
+          Already have an account?{' '}
+          <Link to="/login" className="text-indigo-600 hover:underline">
+            Login here
+          </Link>
+        </p>
+      </div>
     </div>
   );
 }

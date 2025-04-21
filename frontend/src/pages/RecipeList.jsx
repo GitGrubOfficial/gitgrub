@@ -21,7 +21,7 @@ const RecipeList = () => {
     fetchRecipes();
   }, []);
 
-  if (loading) return <p>Loading recipes...</p>;
+  if (loading) return <p>Getting recipe from backend</p>;
   if (errorMsg) return <p className="text-red-500">{errorMsg}</p>;
 
   return (
