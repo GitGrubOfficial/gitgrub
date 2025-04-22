@@ -16,3 +16,4 @@ djangorestframework-simplejwt
 rest_framework_simplejwt
 dj-rest-auth[with_social]
 django-extensions
+Pillow
