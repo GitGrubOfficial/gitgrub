@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
-import axiosInstance from '../api/axiosInstance'; // or adjust path
+import axiosInstance from '../api/axiosInstance';
+import RecipeCard from "../components/RecipeCard";
 
 const RecipeList = () => {
   const [recipes, setRecipes] = useState([]);
@@ -25,18 +26,13 @@ const RecipeList = () => {
   if (errorMsg) return <p className="text-red-500">{errorMsg}</p>;
 
   return (
-    <div className="p-4">
-      <h1 className="text-xl font-bold mb-4">Recipe List</h1>
-      <ul className="space-y-2">
-        {recipes.map((recipe) => (
-          <li key={recipe.id} className="border p-4 rounded shadow-sm">
-            <h2 className="text-lg font-semibold">{recipe.title}</h2>
-            <p className="text-sm text-gray-600">Owner: {recipe.owner}</p>
-            <p className="text-sm text-gray-500">Ingredients: {recipe.ingredients}</p>
-            <p className="text-sm text-gray-500">Instructions: {recipe.instructions}</p>
-          </li>
+    <div className="p-6 max-w-6xl mx-auto">
+      <h1 className="text-2xl font-bold mb-6">My Recipes</h1>
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+        {recipes.map(recipe => (
+          <RecipeCard key={recipe.id} recipe={recipe} />
         ))}
-      </ul>
+      </div>
     </div>
   );
 };
