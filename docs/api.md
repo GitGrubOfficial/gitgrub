@@ -47,10 +47,14 @@ Database Components (Minimal)
 ```
 # Register new user
 POST /api/auth/register
+```
 
+```
 # Authenticate user
 POST /api/auth/login
+```
 
+```
 # Get current user profile
 GET /api/auth/me
 ```
@@ -58,35 +62,47 @@ GET /api/auth/me
 ### Recipe Management
 ```
 # List all user's recipes
-GET /api/recipes
+GET /api/users/{username}/recipes
+```
 
+```
 # Create new recipe
-POST /api/recipes
+POST /api/users/{username}/recipes
+```
 
+```
 # Get specific recipe
-GET /api/recipes/{repoId}
+GET /api/users/{username}/recipes/{recipeId}
+```
 
+```
 # Update recipe
-PUT /api/recipes/{repoId}
+PUT /api/users/{username}/recipes/{recipeId}
+```
 
+```
 # Delete recipe
-DELETE /api/recipes{repoId}
+DELETE /api/users/{username}/recipes/{recipeId}
 ```
 
 ### Version Management
 ```
 # List all versions
-GET /api/recipes/{recipeId}/versions
+GET /api/users/{username}/recipes/{recipeId}/versions
+```
 
+```
 # Get specific version
-GET /api/recipes/{recipeId}/versions/{versionId}
+GET /api/users/{username}/recipes/{recipeId}/versions/{versionId}
+```
 
+```
 # Restore version
-POST /api/recipes/{recipeId}/versions/{versionId}/restore
+POST /api/users/{username}/recipes/{recipeId}/versions/{versionId}/restore
 ```
 
 ### Version Comparison
 ```
 # Compare versions
-GET /api/recipes/{recipeId}/diff?v1={versionId1}&v2={versionId2}
+GET /api/users/{username}/recipes/{recipeId}/diff?v1={versionId1}&v2={versionId2}
 ```
