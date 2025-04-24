@@ -38,7 +38,7 @@ const ActionLink = styled(Link)`
 `;
 
 const RecipeView = () => {
-  const { id } = useParams();
+  const { username, id } = useParams();
   const [recipe, setRecipe] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -46,7 +46,7 @@ const RecipeView = () => {
   useEffect(() => {
     const fetchRecipe = async () => {
       try {
-        const data = await getRecipe(id);
+        const data = await getRecipe(username, id);
         setRecipe(data);
         setLoading(false);
       } catch (err) {
@@ -56,7 +56,7 @@ const RecipeView = () => {
     };
 
     fetchRecipe();
-  }, [id]);
+  }, [username, id]);
 
   if (loading) return <p>Loading recipe...</p>;
   if (error) return <p>Error: {error}</p>;
