@@ -1,6 +1,5 @@
 // frontend/src/App.jsx
-import { useState } from 'react'
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
 import './App.css'
 import RecipeList from './components/recipes/RecipeList'
 import RecipeForm from './components/recipes/RecipeForm'
@@ -15,9 +14,13 @@ function App() {
         </header>
         <main className="app-content">
           <Routes>
-            <Route path="/" element={<RecipeList />} />
-            <Route path="/create" element={<RecipeForm />} />
-            <Route path="/recipes/:id" element={<RecipeView />} />
+            {/* Default route redirects to demo user's recipes */}
+            <Route path="/" element={<Navigate to="/users/demo/recipes" />} />
+            
+            {/* User-based routes */}
+            <Route path="/users/:username/recipes" element={<RecipeList />} />
+            <Route path="/users/:username/recipes/new" element={<RecipeForm />} />
+            <Route path="/users/:username/recipes/:id" element={<RecipeView />} />
           </Routes>
         </main>
       </div>

@@ -1,6 +1,6 @@
 // frontend/src/components/recipes/RecipeForm.jsx
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import styled from 'styled-components';
 import { createRecipe } from '../../services/recipeService';
 
@@ -56,6 +56,7 @@ const Button = styled.button`
 
 const RecipeForm = () => {
   const navigate = useNavigate();
+  const { username } = useParams();
   
   const [recipe, setRecipe] = useState({
     title: '',
@@ -74,8 +75,8 @@ const RecipeForm = () => {
   });
   
   const [commitMessage, setCommitMessage] = useState('Initial recipe');
-  const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [submitting, setSubmitting] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -87,20 +88,38 @@ const RecipeForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setSubmitting(true);
+    setError(null);
+    
+    if (!recipe.title.trim()) {
+      setError('Please enter a title');
+      setSubmitting(false);
+      return;
+    }
+    
+    if (!recipe.content.trim()) {
+      setError('Please enter recipe content');
+      setSubmitting(false);
+      return;
+    }
     
     try {
-      setLoading(true);
+      const commitMessage = `Created recipe: ${recipe.title}`;
+      
       const recipeData = {
-        ...recipe,
+        title: recipe.title,
+        content: recipe.content,
         commitMessage
       };
       
-      const newRecipe = await createRecipe(recipeData);
-      navigate(`/recipes/${newRecipe.id}`);
+      const newRecipe = await createRecipe(username, recipeData);
+      
+      navigate(`/users/${username}/recipes/${newRecipe.id}`);
     } catch (err) {
-      setError('Failed to save recipe');
+      console.error('Error creating recipe:', err);
+      setError(`Failed to save recipe: ${err.message || 'Unknown error'}`);
     } finally {
-      setLoading(false);
+      setSubmitting(false);
     }
   };
 
@@ -145,8 +164,8 @@ const RecipeForm = () => {
           />
         </FormGroup>
         
-        <Button type="submit" disabled={loading}>
-          {loading ? 'Saving...' : 'Save Recipe'}
+        <Button type="submit" disabled={submitting}>
+          {submitting ? 'Saving...' : 'Save Recipe'}
         </Button>
       </Form>
     </FormContainer>

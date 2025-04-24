@@ -1,6 +1,6 @@
 // frontend/src/components/recipes/RecipeList.jsx
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import styled from 'styled-components';
 import { getAllRecipes } from '../../services/recipeService';
 
@@ -45,32 +45,34 @@ const CreateButton = styled(Link)`
 `;
 
 const RecipeList = () => {
-  const [recipes, setRecipes] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+    const { username = 'demo' } = useParams();
+    const [recipes, setRecipes] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchRecipes = async () => {
       try {
-        const data = await getAllRecipes();
+        const data = await getAllRecipes(username);
         setRecipes(data);
         setLoading(false);
       } catch (err) {
-        setError('Failed to fetch recipes');
+        console.error('Error fetching recipes:', err);
+        setError(`Failed to fetch recipes: ${err.message}`);
         setLoading(false);
       }
     };
 
     fetchRecipes();
-  }, []);
+  }, [username]);
 
   if (loading) return <p>Loading recipes...</p>;
   if (error) return <p>Error: {error}</p>;
 
   return (
     <ListContainer>
-      <h2>Your Recipes</h2>
-      <CreateButton to="/create">Create New Recipe</CreateButton>
+      <h2>{username}'s Recipes</h2>
+      <CreateButton to={`/users/${username}/recipes/new`}>Create New Recipe</CreateButton>
       
       {recipes.length === 0 ? (
         <p>No recipes found. Create one to get started!</p>
@@ -80,7 +82,8 @@ const RecipeList = () => {
             <RecipeTitle>{recipe.title}</RecipeTitle>
             <p>Last updated: {new Date(recipe.updatedAt).toLocaleString()}</p>
             <RecipeActions>
-              <Link to={`/recipes/${recipe.id}`}>View</Link>
+              {/* Update recipe link to include username */}
+              <Link to={`/users/${username}/recipes/${recipe.id}`}>View</Link>
             </RecipeActions>
           </RecipeItem>
         ))
