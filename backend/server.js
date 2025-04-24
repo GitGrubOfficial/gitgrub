@@ -7,6 +7,7 @@ const simpleGit = require('simple-git');
 
 const app = express();
 const PORT = 3001;
+const crypto = require('crypto');
 
 app.use(cors());
 app.use(express.json());
@@ -31,7 +32,7 @@ app.post('/api/recipes', async (req, res) => {
   try {
     const { title, content, commitMessage } = req.body;
     
-    const id = Date.now().toString();
+    const id = crypto.randomUUID();
     
     const repoPath = getRepoPath(id);
     await fs.ensureDir(repoPath);
