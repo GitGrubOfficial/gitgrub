@@ -15,6 +15,9 @@ class Recipe(models.Model):
     instructions = models.TextField()
     image = models.ImageField(upload_to='recipes/', blank=True, null=True)
 
+    category = models.CharField(max_length=100, blank=True, null=True)
+    diet_preference = models.CharField(max_length=100, blank=True, null=True)
+
     prep_time = models.PositiveIntegerField(help_text="In minutes", null=True, blank=True)
     cook_time = models.PositiveIntegerField(help_text="In minutes", null=True, blank=True)
     servings = models.PositiveIntegerField(null=True, blank=True)
@@ -36,7 +39,7 @@ class Recipe(models.Model):
         default='public'
     )
 
-    git_commit_hash = models.CharField(max_length=40, blank=True, null=True)
+    git_commit_hash = models.CharField(max_length=50, blank=True, null=True)
 
     forked_from = models.ForeignKey(
         'self',

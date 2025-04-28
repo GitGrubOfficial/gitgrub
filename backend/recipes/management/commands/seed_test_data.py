@@ -5,15 +5,15 @@ from recipes.models import Recipe
 import random
 from recipes.services.git_service import save_recipe_markdown
 
-
+sample_categories = ['asian', 'italian', 'mexican', 'american', 'french', 'indian', 'japanese', 'other']
+sample_diets = ['vegan', 'vegetarian', 'meat', 'other']
 class Command(BaseCommand):
     help = "Seed test users and recipes for development"
 
     def handle(self, *args, **kwargs):
-        user_count = 4
+        user_count = 1
         recipes_per_user = 8
 
-        # Create test users
         for i in range(1, user_count + 1):
             email = f"TuanTesting{i}@example.com"
             user, created = CustomUser.objects.get_or_create(
@@ -21,7 +21,7 @@ class Command(BaseCommand):
                 defaults={
                     "first_name": f"User{i}",
                     "last_name": "Tester",
-                    "diet_preference": "omnivore",
+                    "diet_preference": "meat",
                     "is_complete": True,
                 },
             )
@@ -38,17 +38,9 @@ class Command(BaseCommand):
             ]
 
             sample_descriptions = [
-                """This hearty dish has been passed down through generations. Packed with flavor and easy to make, it's a comfort food staple the whole family will love.
-
-            Perfect for chilly nights, it pairs beautifully with a crisp salad or crusty bread.""",
-
-                """A vibrant, wholesome recipe that’s loaded with fresh ingredients. It’s a great meal prep option and incredibly versatile—add your own twist!
-
-            Don't forget to drizzle with tahini dressing for a creamy finish.""",
-
-                """Savory and simple, this recipe brings together everyday ingredients to create something special. Perfect for weeknight dinners when time is short.
-
-            Leftovers reheat well, making it a smart choice for busy schedules."""
+                """This hearty dish has been passed down through generations...""",
+                """A vibrant, wholesome recipe that’s loaded with fresh ingredients...""",
+                """Savory and simple, this recipe brings together everyday ingredients..."""
             ]
 
             sample_ingredients = [
@@ -99,21 +91,24 @@ class Command(BaseCommand):
                 ]
             ]
 
-            # Create sample recipes for this user
             for j in range(1, recipes_per_user + 1):
                 title = random.choice(sample_titles)
                 description = random.choice(sample_descriptions)
                 ingredients = "\n".join(random.choice(sample_ingredients))
                 instructions = "\n".join(random.choice(sample_instructions))
 
+                visibility = random.choice(["public", "private"])
+                category = random.choice(sample_categories)
+                diet_preference = random.choice(sample_diets)
+
                 recipe, _ = Recipe.objects.update_or_create(
-                    title=f"{title} {j}",
+                    title=f"{title} {i}-{j}",
                     owner=user,
                     defaults={
                         "ingredients": ingredients,
                         "instructions": instructions,
                         "description": description,
-                        "visibility": "public",
+                        "visibility": visibility,
                         "original_author": user,
                         "change_description": "Initial test seed",
                         "prep_time": random.choice([10, 15, 20, 25]),
@@ -122,6 +117,8 @@ class Command(BaseCommand):
                         "difficulty": random.choice(["easy", "medium", "hard"]),
                         "rating": round(random.uniform(3.5, 5.0), 1),
                         "is_featured": random.choice([True, False]),
+                        "category": category,
+                        "diet_preference": diet_preference,
                     }
                 )
 
@@ -129,9 +126,6 @@ class Command(BaseCommand):
                 recipe.git_commit_hash = commit_hash
                 recipe.save(update_fields=['git_commit_hash'])
 
-                if created:
-                    self.stdout.write(f"Created recipe: {title}")
-                else:
-                    self.stdout.write(f"Recipe '{title}' already exists")
+                self.stdout.write(self.style.SUCCESS(f"Created recipe: {recipe.title}"))
 
         self.stdout.write(self.style.SUCCESS("Test data seeding complete!"))

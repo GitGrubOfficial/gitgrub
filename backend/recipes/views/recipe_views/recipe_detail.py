@@ -10,14 +10,15 @@ from rest_framework.permissions import IsAuthenticated
 
 class RecipeDetailView(APIView):
     permission_classes = [IsAuthenticated]
+
     def get(self, request, pk):
         try:
             recipe = Recipe.objects.get(pk=pk, owner=request.user)
         except Recipe.DoesNotExist:
             return Response({"detail": "Recipe not found."}, status=status.HTTP_404_NOT_FOUND)
 
-        serializer_class = RecipeSerializer(recipe)
-        return Response(serializer_class.data)
+        serializer = RecipeSerializer(recipe, context={"request": request})
+        return Response(serializer.data)
 
 
 
