@@ -2,8 +2,8 @@ import { Link } from "react-router-dom";
 
 const RecipeCard = ({ recipe }) => {
   return (
-    <Link to={`/recipes/${recipe.id}`} className="block">
-      <div className="bg-white shadow-md rounded-lg overflow-hidden hover:shadow-lg transition">
+    <Link to={`/recipes/${recipe.id}`} className="block cursor-pointer">
+      <div className="bg-white shadow-md rounded-lg overflow-hidden hover:shadow-lg transition duration-200 ease-in-out">
         {recipe.image ? (
           <img
             src={recipe.image}

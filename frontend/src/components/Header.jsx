@@ -14,7 +14,7 @@ const Header = () => {
 
   return (
     <header className="bg-white shadow-md p-4 flex items-center justify-between">
-      {/* Search bar should be on the left, home and feed button should be center and userprofile on the right */}
+        {/*Search bar should be on the left, home and feed button should be center and userprofile on the right */}
       <div className="flex items-center space-x-4 w-1/3">
         <Link to="/recipes" className="text-xl font-bold text-blue-600">
           RecipeHub
