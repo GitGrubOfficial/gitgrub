@@ -17,6 +17,24 @@ export const getRecipe = async (username, id) => {
 
 // Create a new recipe
 export const createRecipe = async (username, recipeData) => {
-  const response = await axios.post(`${API_BASE_URL}/users/${username}/recipes`, recipeData);
+  const response = await axios.post(`${API_BASE_URL}/users/${username}/recipes/${recipeData.id || ''}`, recipeData);
+  return response.data;
+};
+
+// Update a recipe
+export const updateRecipe = async (username, id, recipeData) => {
+  const response = await axios.put(`${API_BASE_URL}/users/${username}/recipes/${id}`, recipeData);
+  return response.data;
+};
+
+// Get recipe version history
+export const getRecipeHistory = async (username, id) => {
+  const response = await axios.get(`${API_BASE_URL}/users/${username}/recipes/${id}/history`);
+  return response.data;
+};
+
+// Get a specific version of a recipe
+export const getRecipeVersion = async (username, id, commitHash) => {
+  const response = await axios.get(`${API_BASE_URL}/users/${username}/recipes/${id}/versions/${commitHash}`);
   return response.data;
 };
