@@ -1,5 +1,5 @@
 // frontend/src/components/recipes/RecipeForm.jsx
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { createRecipe } from '../../services/recipeService';
 
@@ -9,7 +9,19 @@ const RecipeForm = () => {
   
   const [recipe, setRecipe] = useState({
     title: '',
-    content: `## Ingredients
+    content: ''
+  });
+  
+  const [commitMessage, setCommitMessage] = useState('Initial recipe');
+  const [error, setError] = useState(null);
+  const [submitting, setSubmitting] = useState(false);
+
+  // Update content template when title changes
+  useEffect(() => {
+    // Create template with title as H1
+    const baseTemplate = `# ${recipe.title || 'Recipe Title'}
+
+## Ingredients
 
 - Ingredient 1
 - Ingredient 2
@@ -20,12 +32,16 @@ const RecipeForm = () => {
 1. Step 1
 2. Step 2
 3. Step 3
-`
-  });
-  
-  const [commitMessage, setCommitMessage] = useState('Initial recipe');
-  const [error, setError] = useState(null);
-  const [submitting, setSubmitting] = useState(false);
+`;
+    
+    // Only auto-update content if it's empty or matches the previous template
+    if (!recipe.content || recipe.content.startsWith('# ')) {
+      setRecipe(prev => ({
+        ...prev,
+        content: baseTemplate
+      }));
+    }
+  }, [recipe.title]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -57,9 +73,15 @@ const RecipeForm = () => {
     }
     
     try {
+      // Ensure content starts with title as H1
+      let finalContent = recipe.content;
+      if (!finalContent.startsWith(`# ${recipe.title}`)) {
+        finalContent = `# ${recipe.title}\n\n${finalContent.replace(/^# .*\n\n/, '')}`;
+      }
+      
       const recipeData = {
         title: recipe.title,
-        content: recipe.content,
+        content: finalContent,
         commitMessage: commitMessage || `Created recipe: ${recipe.title}`
       };
       
@@ -90,6 +112,7 @@ const RecipeForm = () => {
             value={recipe.title}
             onChange={handleChange}
             required
+            placeholder="Enter recipe title"
           />
         </div>
         

@@ -12,19 +12,39 @@ const RecipeEditForm = () => {
     content: ''
   });
   
+  const [originalContent, setOriginalContent] = useState('');
   const [commitMessage, setCommitMessage] = useState('Update recipe');
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
 
+  // Extract title from content
+  const extractTitleFromContent = (content) => {
+    if (!content) return '';
+    const firstLine = content.split('\n')[0];
+    if (firstLine && firstLine.startsWith('# ')) {
+      return firstLine.substring(2).trim();
+    }
+    return '';
+  };
+
   useEffect(() => {
     const fetchRecipe = async () => {
       try {
         const data = await getRecipe(username, id);
+        
+        // Extract title from content if present
+        const contentTitle = extractTitleFromContent(data.content);
+        const title = contentTitle || data.title;
+        
         setRecipe({
-          title: data.title,
+          title: title,
           content: data.content
         });
+        
+        // Store original content for comparison
+        setOriginalContent(data.content);
+        
         setLoading(false);
       } catch (err) {
         console.error('Error fetching recipe:', err);
@@ -36,12 +56,54 @@ const RecipeEditForm = () => {
     fetchRecipe();
   }, [username, id]);
 
+  // Update title in content when title field changes
+  useEffect(() => {
+    // Only update if we're not in loading state and have content
+    if (!loading && recipe.content) {
+      // Check if content starts with a title
+      const hasTitle = recipe.content.startsWith('# ');
+      
+      if (hasTitle) {
+        // Replace existing title
+        const updatedContent = recipe.content.replace(
+          /^# .*(\r?\n|\r)/,
+          `# ${recipe.title}$1`
+        );
+        
+        if (updatedContent !== recipe.content) {
+          setRecipe(prev => ({
+            ...prev,
+            content: updatedContent
+          }));
+        }
+      } else {
+        // Add title to the beginning
+        setRecipe(prev => ({
+          ...prev,
+          content: `# ${recipe.title}\n\n${prev.content}`
+        }));
+      }
+    }
+  }, [recipe.title, loading]);
+
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setRecipe({
-      ...recipe,
-      [name]: value
-    });
+    
+    if (name === 'content') {
+      // When content changes, check if title line changed
+      const contentTitle = extractTitleFromContent(value);
+      
+      setRecipe(prev => ({
+        ...prev,
+        content: value,
+        title: contentTitle || prev.title
+      }));
+    } else {
+      setRecipe({
+        ...recipe,
+        [name]: value
+      });
+    }
   };
 
   const handleCancel = () => {
@@ -66,9 +128,15 @@ const RecipeEditForm = () => {
     }
     
     try {
+      // Ensure content starts with title as H1
+      let finalContent = recipe.content;
+      if (!finalContent.startsWith(`# ${recipe.title}`)) {
+        finalContent = `# ${recipe.title}\n\n${finalContent.replace(/^# .*\n\n/, '')}`;
+      }
+      
       const recipeData = {
         title: recipe.title,
-        content: recipe.content,
+        content: finalContent,
         commitMessage
       };
       

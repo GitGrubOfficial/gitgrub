@@ -13,24 +13,21 @@ describe('Recipe Workflow Integration', () => {
   let recipeId;
 
   beforeAll(async () => {
+    // Clear and recreate test directory
     await fs.remove(TEST_REPOS_DIR);
     await fs.ensureDir(TEST_REPOS_DIR);
     
+    // Create the app with test configuration
     app = setupApp({
-      reposDir: TEST_REPOS_DIR,
-      inMemoryOnly: true
+      reposDir: TEST_REPOS_DIR
     });
     
-    // Add test user - need to access through the context object
-    app.locals.context.dataStore.users.push({
-      username: USERNAME,
-      email: 'test@example.com'
-    });
-    
+    // Ensure test user directory exists
     await fs.ensureDir(path.join(TEST_REPOS_DIR, USERNAME));
   });
 
   afterAll(async () => {
+    // Remove test directory
     await fs.remove(TEST_REPOS_DIR);
   });
 
@@ -55,6 +52,7 @@ describe('Recipe Workflow Integration', () => {
     expect(response.body).toHaveProperty('createdAt');
     expect(response.body).toHaveProperty('updatedAt');
 
+    // Verify the file was created
     const repoPath = path.join(TEST_REPOS_DIR, USERNAME, recipeId);
     const filePath = path.join(repoPath, 'recipe.md');
     
