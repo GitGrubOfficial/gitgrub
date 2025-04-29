@@ -1,31 +1,40 @@
-// frontend/src/components/recipes/RecipeForm.jsx
-import React, { useState } from 'react';
+// frontend/src/components/recipes/RecipeEditForm.jsx
+import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { createRecipe } from '../../services/recipeService';
+import { getRecipe, updateRecipe } from '../../services/recipeService';
 
-const RecipeForm = () => {
+const RecipeEditForm = () => {
   const navigate = useNavigate();
-  const { username } = useParams();
+  const { username, id } = useParams();
   
   const [recipe, setRecipe] = useState({
     title: '',
-    content: `## Ingredients
-
-- Ingredient 1
-- Ingredient 2
-- Ingredient 3
-
-## Instructions
-
-1. Step 1
-2. Step 2
-3. Step 3
-`
+    content: ''
   });
   
-  const [commitMessage, setCommitMessage] = useState('Initial recipe');
+  const [commitMessage, setCommitMessage] = useState('Update recipe');
   const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
+
+  useEffect(() => {
+    const fetchRecipe = async () => {
+      try {
+        const data = await getRecipe(username, id);
+        setRecipe({
+          title: data.title,
+          content: data.content
+        });
+        setLoading(false);
+      } catch (err) {
+        console.error('Error fetching recipe:', err);
+        setError(`Failed to fetch recipe: ${err.message || 'Unknown error'}`);
+        setLoading(false);
+      }
+    };
+
+    fetchRecipe();
+  }, [username, id]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -36,7 +45,7 @@ const RecipeForm = () => {
   };
 
   const handleCancel = () => {
-    navigate(`/users/${username}/recipes`);
+    navigate(`/users/${username}/recipes/${id}`);
   };
 
   const handleSubmit = async (e) => {
@@ -60,23 +69,25 @@ const RecipeForm = () => {
       const recipeData = {
         title: recipe.title,
         content: recipe.content,
-        commitMessage: commitMessage || `Created recipe: ${recipe.title}`
+        commitMessage
       };
       
-      const newRecipe = await createRecipe(username, recipeData);
+      await updateRecipe(username, id, recipeData);
       
-      navigate(`/users/${username}/recipes/${newRecipe.id}`);
+      navigate(`/users/${username}/recipes/${id}`);
     } catch (err) {
-      console.error('Error creating recipe:', err);
-      setError(`Failed to save recipe: ${err.message || 'Unknown error'}`);
+      console.error('Error updating recipe:', err);
+      setError(`Failed to update recipe: ${err.message || 'Unknown error'}`);
     } finally {
       setSubmitting(false);
     }
   };
 
+  if (loading) return <div className="loading-spinner"></div>;
+
   return (
     <div className="form-container">
-      <h2>Create New Recipe</h2>
+      <h2>Edit Recipe</h2>
       
       {error && <div style={{ color: 'red', marginBottom: '20px' }}>{error}</div>}
       
@@ -111,7 +122,7 @@ const RecipeForm = () => {
             id="commitMessage"
             value={commitMessage}
             onChange={(e) => setCommitMessage(e.target.value)}
-            placeholder="Initial recipe creation"
+            placeholder="Describe your changes"
           />
         </div>
         
@@ -120,7 +131,7 @@ const RecipeForm = () => {
             Cancel
           </button>
           <button type="submit" className="btn-primary" disabled={submitting}>
-            {submitting ? 'Saving...' : 'Save Recipe'}
+            {submitting ? 'Saving...' : 'Save Changes'}
           </button>
         </div>
       </form>
@@ -128,4 +139,4 @@ const RecipeForm = () => {
   );
 };
 
-export default RecipeForm;
+export default RecipeEditForm;

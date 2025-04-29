@@ -1,54 +1,13 @@
 // frontend/src/components/recipes/RecipeList.jsx
 import React, { useState, useEffect } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import styled from 'styled-components';
 import { getAllRecipes } from '../../services/recipeService';
 
-const ListContainer = styled.div`
-  max-width: 800px;
-  margin: 0 auto;
-  padding: 20px;
-`;
-
-const RecipeItem = styled.div`
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  padding: 15px;
-  margin-bottom: 15px;
-  
-  &:hover {
-    background-color: #f9f9f9;
-  }
-`;
-
-const RecipeTitle = styled.h3`
-  margin-top: 0;
-  margin-bottom: 10px;
-`;
-
-const RecipeActions = styled.div`
-  margin-top: 10px;
-`;
-
-const CreateButton = styled(Link)`
-  display: inline-block;
-  background-color: #4CAF50;
-  color: white;
-  padding: 10px 15px;
-  text-decoration: none;
-  border-radius: 4px;
-  margin-bottom: 20px;
-  
-  &:hover {
-    background-color: #45a049;
-  }
-`;
-
 const RecipeList = () => {
-    const { username = 'demo' } = useParams();
-    const [recipes, setRecipes] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
+  const { username = 'demo' } = useParams();
+  const [recipes, setRecipes] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchRecipes = async () => {
@@ -66,29 +25,30 @@ const RecipeList = () => {
     fetchRecipes();
   }, [username]);
 
-  if (loading) return <p>Loading recipes...</p>;
-  if (error) return <p>Error: {error}</p>;
+  if (loading) return <div className="loading-spinner"></div>;
+  if (error) return <div className="list-container"><p>Error: {error}</p></div>;
 
   return (
-    <ListContainer>
+    <div className="list-container">
       <h2>{username}'s Recipes</h2>
-      <CreateButton to={`/users/${username}/recipes/new`}>Create New Recipe</CreateButton>
+      <Link to={`/users/${username}/recipes/new`} className="btn btn-primary">Create New Recipe</Link>
       
       {recipes.length === 0 ? (
         <p>No recipes found. Create one to get started!</p>
       ) : (
-        recipes.map(recipe => (
-          <RecipeItem key={recipe.id}>
-            <RecipeTitle>{recipe.title}</RecipeTitle>
-            <p>Last updated: {new Date(recipe.updatedAt).toLocaleString()}</p>
-            <RecipeActions>
-              {/* Update recipe link to include username */}
-              <Link to={`/users/${username}/recipes/${recipe.id}`}>View</Link>
-            </RecipeActions>
-          </RecipeItem>
-        ))
+        <div className="recipe-list">
+          {recipes.map(recipe => (
+            <div className="recipe-item" key={recipe.id}>
+              <h3>{recipe.title}</h3>
+              <p>Last updated: {new Date(recipe.updatedAt).toLocaleString()}</p>
+              <div className="recipe-actions">
+                <Link to={`/users/${username}/recipes/${recipe.id}`} className="btn btn-secondary">View Recipe</Link>
+              </div>
+            </div>
+          ))}
+        </div>
       )}
-    </ListContainer>
+    </div>
   );
 };
 
