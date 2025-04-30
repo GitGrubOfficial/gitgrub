@@ -6,9 +6,11 @@ const path = require('path');
 const simpleGit = require('simple-git');
 const crypto = require('crypto');
 
+const recipeFileName = 'recipe.md';
+
 const getUserReposPath = (baseDir, username) => path.join(baseDir, username);
 const getRepoPath = (baseDir, username, recipeId) => path.join(baseDir, username, recipeId);
-const getRecipeFilePath = (baseDir, username, recipeId) => path.join(baseDir, username, recipeId, 'recipe.md');
+const getRecipeFilePath = (baseDir, username, recipeId) => path.join(baseDir, username, recipeId, recipeFileName);
 
 // Update the extractTitleFromContent function in server.js
 const extractTitleFromContent = (content, fallbackId = null) => {
@@ -42,7 +44,7 @@ const getRepoMetadata = async (repoPath, recipeId) => {
       return null;
     }
     
-    const recipeFile = path.join(repoPath, 'recipe.md');
+    const recipeFile = path.join(repoPath, recipeFileName);
     if (!(await fs.pathExists(recipeFile))) {
       return null;
     }
@@ -74,23 +76,18 @@ const getAllRecipes = async (req, res, { baseDir }) => {
     const { username } = req.params;
     const userPath = getUserReposPath(baseDir, username);
     
-    // Check if user directory exists
     if (!(await fs.pathExists(userPath))) {
       return res.status(404).json({ message: 'User not found' });
     }
     
-    // Read all recipe directories for this user
     const recipeDirs = await fs.readdir(userPath);
     const recipes = [];
     
-    // Process each recipe directory
     for (const recipeId of recipeDirs) {
       const repoPath = getRepoPath(baseDir, username, recipeId);
       
-      // Skip if not a directory
       if (!(await fs.stat(repoPath)).isDirectory()) continue;
       
-      // Get metadata from git repository
       const metadata = await getRepoMetadata(repoPath, recipeId);
       
       if (metadata) {
@@ -114,37 +111,29 @@ const createRecipe = async (req, res, { baseDir }) => {
     const { username } = req.params;
     const { title, content, commitMessage } = req.body;
     
-    // Ensure user directory exists
     const userPath = getUserReposPath(baseDir, username);
     await fs.ensureDir(userPath);
     
-    // Generate unique ID
-    const id = crypto.randomUUID();
+    const recipeId = crypto.randomUUID();
     
-    // Create repository directory
-    const repoPath = getRepoPath(baseDir, username, id);
+    const repoPath = getRepoPath(baseDir, username, recipeId);
     await fs.ensureDir(repoPath);
     
-    // Initialize git repository
     const git = simpleGit(repoPath);
     await git.init();
     await git.addConfig('user.name', username);
     await git.addConfig('user.email', 'poc@example.com');
     
-    // Write recipe file
-    const filePath = getRecipeFilePath(baseDir, username, id);
+    const filePath = getRecipeFilePath(baseDir, username, recipeId);
     await fs.writeFile(filePath, content);
     
-    // Commit changes
     await git.add('./*');
     await git.commit(commitMessage || 'Initial recipe');
     
-    // Get repo metadata
-    const metadata = await getRepoMetadata(repoPath, id);
+    const metadata = await getRepoMetadata(repoPath, recipeId);
     
-    // Return new recipe info
     res.status(201).json({
-      id,
+      id: recipeId,
       ...metadata
     });
   } catch (error) {
@@ -156,28 +145,24 @@ const createRecipe = async (req, res, { baseDir }) => {
 // Get a specific recipe
 const getRecipe = async (req, res, { baseDir }) => {
   try {
-    const { username, id } = req.params;
+    const { username, id: recipeId } = req.params;
     
-    // Check if repository exists
-    const repoPath = getRepoPath(baseDir, username, id);
+    const repoPath = getRepoPath(baseDir, username, recipeId);
     if (!(await fs.pathExists(repoPath))) {
       return res.status(404).json({ message: 'Recipe not found' });
     }
     
-    // Read recipe content
-    const filePath = getRecipeFilePath(baseDir, username, id);
+    const filePath = getRecipeFilePath(baseDir, username, recipeId);
     if (!(await fs.pathExists(filePath))) {
       return res.status(404).json({ message: 'Recipe file not found' });
     }
     
     const content = await fs.readFile(filePath, 'utf8');
     
-    // Get metadata from git repository
-    const metadata = await getRepoMetadata(repoPath, id);
+    const metadata = await getRepoMetadata(repoPath, recipeId);
     
-    // Return recipe with content
     res.json({
-      id,
+      id: recipeId,
       ...metadata,
       content
     });
@@ -193,25 +178,20 @@ const updateRecipe = async (req, res, { baseDir }) => {
     const { username, id } = req.params;
     const { title, content, commitMessage } = req.body;
     
-    // Check if repository exists
     const repoPath = getRepoPath(baseDir, username, id);
     if (!(await fs.pathExists(repoPath))) {
       return res.status(404).json({ message: 'Recipe not found' });
     }
     
-    // Update recipe file
     const filePath = getRecipeFilePath(baseDir, username, id);
     await fs.writeFile(filePath, content);
     
-    // Commit changes
     const git = simpleGit(repoPath);
     await git.add('./*');
     await git.commit(commitMessage || 'Update recipe');
     
-    // Get updated metadata
     const metadata = await getRepoMetadata(repoPath, id);
     
-    // Return updated recipe
     res.json({
       id,
       ...metadata,
@@ -228,17 +208,14 @@ const getRecipeHistory = async (req, res, { baseDir }) => {
   try {
     const { username, id } = req.params;
     
-    // Check if repository exists
     const repoPath = getRepoPath(baseDir, username, id);
     if (!(await fs.pathExists(repoPath))) {
       return res.status(404).json({ message: 'Recipe not found' });
     }
     
-    // Get commit history
     const git = simpleGit(repoPath);
     const logResult = await git.log();
     
-    // Format history
     const history = logResult.all.map(commit => ({
       hash: commit.hash,
       author: commit.author_name,
@@ -258,7 +235,6 @@ const getRecipeVersion = async (req, res, { baseDir }) => {
   try {
     const { username, id, commitHash } = req.params;
     
-    // Check if repository exists
     const repoPath = getRepoPath(baseDir, username, id);
     if (!(await fs.pathExists(repoPath))) {
       return res.status(404).json({ message: 'Recipe not found' });
@@ -266,17 +242,14 @@ const getRecipeVersion = async (req, res, { baseDir }) => {
     
     const git = simpleGit(repoPath);
     
-    // Check if commit exists
     try {
       await git.show([commitHash]);
     } catch (error) {
       return res.status(404).json({ message: 'Version not found' });
     }
     
-    // Get recipe content at that commit
     const content = await git.show([`${commitHash}:recipe.md`]);
     
-    // Get commit info
     const commitInfo = await git.show([
       '--no-patch',
       '--format=%H%n%an%n%ad%n%s',
@@ -285,7 +258,6 @@ const getRecipeVersion = async (req, res, { baseDir }) => {
     
     const [hash, author, date, message] = commitInfo.trim().split('\n');
     
-    // Extract title from content
     const title = extractTitleFromContent(content) || id;
     
     res.json({
@@ -303,11 +275,9 @@ const getRecipeVersion = async (req, res, { baseDir }) => {
   }
 };
 
-// Clean setupApp function with no in-memory concepts
 const setupApp = (config = {}) => {
   const app = express();
   
-  // Apply configuration or defaults
   const baseDir = config.reposDir || path.join(__dirname, 'git-repos');
   
   // Setup middleware
@@ -318,7 +288,6 @@ const setupApp = (config = {}) => {
     next();
   });
   
-  // Ensure base directory exists
   fs.ensureDirSync(baseDir);
   
   // Create context object with only what's needed
