@@ -10,7 +10,7 @@ from rest_framework_simplejwt.views import (
 )
 
 urlpatterns = [
-    path("auth/registration/", CustomRegisterView.as_view(), name="rest_register"),
+    path("auth/registration/", CustomRegisterView.as_view(), name="custom_register"),
     path("user/profile/", UserProfileView.as_view(), name="user-profile"),
 
 ]

@@ -1,4 +1,4 @@
-import {BrowserRouter as Router, Routes, Route, BrowserRouter} from "react-router-dom";
+import {Routes, Route, BrowserRouter} from "react-router-dom";
 import RecipeList from "./pages/RecipeList";
 import RecipeDetailPage from "./pages/RecipeDetail";
 import Login from "./pages/Login";
@@ -8,6 +8,8 @@ import "./App.css";
 import Header from "./components/Header";
 import RecipeEditPage from "./pages/RecipeEditPage";
 import RecipeCreatePage from "./pages/RecipeCreatePage";
+import CompleteProfilePage from "./pages/CompleteProfilePage";
+
 
 function AppLayout({ children }) {
   const isLoggedIn = !!localStorage.getItem("accessToken");
@@ -26,6 +28,14 @@ function App() {
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+        <Route
+            path="/complete-profile"
+            element={
+                <PrivateRoute>
+                  <CompleteProfilePage />
+                </PrivateRoute>
+            }
+        />
 
         <Route
           path="/recipes"

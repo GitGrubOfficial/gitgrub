@@ -2,12 +2,15 @@ import React, { useState } from 'react';
 import axiosInstance from '../api/axiosInstance';
 import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
+
 
 function Register() {
   const [email, setEmail] = useState('');
   const [password1, setPassword1] = useState('');
   const [password2, setPassword2] = useState('');
   const [errorMsg, setErrorMsg] = useState('');
+  const { setUser } = useAuth();
   const navigate = useNavigate();
 
   const handleRegister = async (e) => {
@@ -18,7 +21,23 @@ function Register() {
         password1,
         password2,
       });
-      navigate('/login');
+
+      const loginRes = await axiosInstance.post('/api/auth/jwt/create/', {
+        email,
+        password: password1,
+      });
+      const { access, refresh } = loginRes.data;
+      localStorage.setItem('accessToken', access);
+      localStorage.setItem('refreshToken', refresh);
+
+      const profileRes = await axiosInstance.get('/api/user/profile/');
+      setUser(profileRes.data);
+
+      if (profileRes.data.is_complete) {
+        navigate('/recipes');
+      } else {
+        navigate('/complete-profile');
+      }
     } catch (err) {
       console.error(err);
       if (err.response?.data) {

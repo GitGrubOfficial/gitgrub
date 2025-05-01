@@ -1,14 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axiosInstance from '../api/axiosInstance';
+import { useAuth } from "../context/AuthContext";
 
 
-export default function RecipeDetailPage({ currentUser }) {
+
+export default function RecipeDetailPage() {
   const { id } = useParams();
   const [recipe, setRecipe] = useState(null);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
   const [selectedImage, setSelectedImage] = useState(null);
+  const { currentUser } = useAuth();
+
 
 
   useEffect(() => {
@@ -124,7 +128,7 @@ export default function RecipeDetailPage({ currentUser }) {
 
         </div>
       </div>
-        // THis section is both instrcution and ingredients, left and right respectively
+      {/* THis section is both instrcution and ingredients, left and right respectively */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-10">
         <div>
           <h2 className="text-2xl font-semibold mb-4">Instructions</h2>

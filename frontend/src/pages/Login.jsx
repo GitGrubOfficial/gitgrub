@@ -1,30 +1,29 @@
-import React, { useState } from 'react';
-import axiosInstance from '../api/axiosInstance';
-import { useNavigate } from 'react-router-dom';
-import { Link } from 'react-router-dom';
+import React, { useState } from "react";
+import { useNavigate, Link } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 
 function Login() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [errorMsg, setErrorMsg] = useState('');
+  const { login, user } = useAuth();
+
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [errorMsg, setErrorMsg] = useState("");
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      const res = await axiosInstance.post('/api/auth/jwt/create/', {
-        email,
-        password,
-      });
-
-      const { access, refresh } = res.data;
-      localStorage.setItem('accessToken', access);
-      localStorage.setItem('refreshToken', refresh);
-
-      navigate('/recipes');
+      await login(email, password); // use login from context
+      setTimeout(() => {
+      if (user?.is_complete === false) {
+        navigate("/complete-profile");
+      } else {
+        navigate("/recipes");
+      }
+    }, 100);
     } catch (err) {
       console.error(err);
-      setErrorMsg('Invalid email or password');
+      setErrorMsg("Invalid email or password");
     }
   };
 
@@ -67,7 +66,7 @@ function Login() {
         </form>
 
         <p className="mt-4 text-sm text-center text-gray-600">
-          Don’t have an account?{' '}
+          Don’t have an account?{" "}
           <Link to="/register" className="text-indigo-600 hover:underline">
             Register here
           </Link>
