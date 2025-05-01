@@ -22,18 +22,14 @@ function Register() {
         password2,
       });
 
+
       const loginRes = await axiosInstance.post('/api/auth/jwt/create/', {
         email,
         password: password1,
       });
-      const { access, refresh } = loginRes.data;
-      localStorage.setItem('accessToken', access);
-      localStorage.setItem('refreshToken', refresh);
 
-      const profileRes = await axiosInstance.get('/api/user/profile/');
-      setUser(profileRes.data);
 
-      if (profileRes.data.is_complete) {
+      if (loginRes.data.is_complete) {
         navigate('/recipes');
       } else {
         navigate('/complete-profile');

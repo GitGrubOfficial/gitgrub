@@ -21,7 +21,6 @@ function CompleteProfilePage() {
     e.preventDefault();
     try {
       const res = await axiosInstance.patch('/api/user/profile/', formData);
-      setUser(res.data);
       navigate('/recipes');
     } catch (err) {
       console.error('Profile update failed:', err);
