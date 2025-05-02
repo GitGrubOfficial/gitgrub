@@ -122,7 +122,7 @@ describe('Recipe Workflow Integration', () => {
   // Test getting recipe version history
   test('should get recipe version history', async () => {
     const response = await request(app)
-      .get(`/api/users/${USERNAME}/recipes/${recipeId}/history`)
+      .get(`/api/users/${USERNAME}/recipes/${recipeId}/versions`)
       .expect(200);
 
     expect(Array.isArray(response.body)).toBe(true);
@@ -143,7 +143,7 @@ describe('Recipe Workflow Integration', () => {
   test('should get a specific version of a recipe', async () => {
     // First get the commit hash of the initial version
     const historyResponse = await request(app)
-      .get(`/api/users/${USERNAME}/recipes/${recipeId}/history`)
+      .get(`/api/users/${USERNAME}/recipes/${recipeId}/versions`)
       .expect(200);
     
     const initialVersionHash = historyResponse.body[1].hash;

@@ -204,7 +204,7 @@ const updateRecipe = async (req, res, { baseDir }) => {
 };
 
 // Get recipe version history
-const getRecipeHistory = async (req, res, { baseDir }) => {
+const getRecipeVersions = async (req, res, { baseDir }) => {
   try {
     const { username, id } = req.params;
     
@@ -248,7 +248,7 @@ const getRecipeVersion = async (req, res, { baseDir }) => {
       return res.status(404).json({ message: 'Version not found' });
     }
     
-    const content = await git.show([`${commitHash}:recipe.md`]);
+    const content = await git.show([`${commitHash}:${recipeFileName}`]);
     
     const commitInfo = await git.show([
       '--no-patch',
@@ -275,6 +275,45 @@ const getRecipeVersion = async (req, res, { baseDir }) => {
   }
 };
 
+const restoreRecipeVersion = async (req, res, { baseDir }) => {
+  try {
+    const { username, id, commitHash } = req.params;
+    const { commitMessage } = req.body;
+    
+    const repoPath = getRepoPath(baseDir, username, id);
+    if (!(await fs.pathExists(repoPath))) {
+      return res.status(404).json({ message: 'Recipe not found' });
+    }
+    
+    const git = simpleGit(repoPath);
+    
+    try {
+      await git.show([commitHash]);
+    } catch (error) {
+      return res.status(404).json({ message: 'Version not found' });
+    }
+    
+    const content = await git.show([`${commitHash}:${recipeFileName}`]);
+    
+    const filePath = getRecipeFilePath(baseDir, username, id);
+    await fs.writeFile(filePath, content);
+    
+    await git.add('./*');
+    await git.commit(commitMessage || `Restored from version ${commitHash.substring(0, 7)}`);
+    
+    const metadata = await getRepoMetadata(repoPath, id);
+    
+    res.json({
+      id,
+      ...metadata,
+      content
+    });
+  } catch (error) {
+    console.error('Error restoring recipe version:', error);
+    res.status(500).json({ message: 'Failed to restore recipe version', error: error.message });
+  }
+};
+
 const setupApp = (config = {}) => {
   const app = express();
   
@@ -298,8 +337,9 @@ const setupApp = (config = {}) => {
   app.post('/api/users/:username/recipes', (req, res) => createRecipe(req, res, context));
   app.get('/api/users/:username/recipes/:id', (req, res) => getRecipe(req, res, context));
   app.put('/api/users/:username/recipes/:id', (req, res) => updateRecipe(req, res, context));
-  app.get('/api/users/:username/recipes/:id/history', (req, res) => getRecipeHistory(req, res, context));
+  app.get('/api/users/:username/recipes/:id/versions', (req, res) => getRecipeVersions(req, res, context));
   app.get('/api/users/:username/recipes/:id/versions/:commitHash', (req, res) => getRecipeVersion(req, res, context));
+  app.post('/api/users/:username/recipes/:id/restore/:commitHash', (req, res) => restoreRecipeVersion(req, res, context));
   
   // Make context accessible for testing
   app.locals.context = context;

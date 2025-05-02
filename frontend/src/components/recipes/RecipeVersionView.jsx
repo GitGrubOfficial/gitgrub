@@ -1,7 +1,7 @@
 // frontend/src/components/recipes/RecipeVersionView.jsx
 import React, { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
-import { getRecipeVersion, updateRecipe } from '../../services/recipeService';
+import { getRecipeVersion, restoreRecipeVersion } from '../../services/recipeService';
 import MarkdownRenderer from '../common/MarkdownRenderer';
 
 const RecipeVersionView = () => {
@@ -33,13 +33,8 @@ const RecipeVersionView = () => {
     
     setRestoring(true);
     try {
-      const updateData = {
-        title: recipe.title,
-        content: recipe.content,
-        commitMessage: `Restored from version ${commitHash.substring(0, 7)}`
-      };
-      
-      await updateRecipe(username, id, updateData);
+      const commitMessage = `Restored from version ${commitHash.substring(0, 7)}`;
+      await restoreRecipeVersion(username, id, commitHash, commitMessage);
       navigate(`/users/${username}/recipes/${id}`);
     } catch (err) {
       console.error('Error restoring version:', err);

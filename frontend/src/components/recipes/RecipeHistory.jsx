@@ -1,7 +1,7 @@
 // frontend/src/components/recipes/RecipeHistory.jsx
 import React, { useState, useEffect } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import { getRecipeHistory } from '../../services/recipeService';
+import { getRecipeVersions } from '../../services/recipeService';
 
 const RecipeHistory = () => {
   const { username, id } = useParams();
@@ -12,7 +12,7 @@ const RecipeHistory = () => {
   useEffect(() => {
     const fetchHistory = async () => {
       try {
-        const data = await getRecipeHistory(username, id);
+        const data = await getRecipeVersions(username, id);
         setHistory(data);
         setLoading(false);
       } catch (err) {

@@ -17,10 +17,9 @@ export const getRecipe = async (username, id) => {
 
 // Create a new recipe
 export const createRecipe = async (username, recipeData) => {
-  const response = await axios.post(`${API_BASE_URL}/users/${username}/recipes/${recipeData.id || ''}`, recipeData);
+  const response = await axios.post(`${API_BASE_URL}/users/${username}/recipes`, recipeData);
   return response.data;
 };
-
 // Update a recipe
 export const updateRecipe = async (username, id, recipeData) => {
   const response = await axios.put(`${API_BASE_URL}/users/${username}/recipes/${id}`, recipeData);
@@ -28,13 +27,22 @@ export const updateRecipe = async (username, id, recipeData) => {
 };
 
 // Get recipe version history
-export const getRecipeHistory = async (username, id) => {
-  const response = await axios.get(`${API_BASE_URL}/users/${username}/recipes/${id}/history`);
+export const getRecipeVersions = async (username, id) => {
+  const response = await axios.get(`${API_BASE_URL}/users/${username}/recipes/${id}/versions`);
   return response.data;
 };
 
 // Get a specific version of a recipe
 export const getRecipeVersion = async (username, id, commitHash) => {
   const response = await axios.get(`${API_BASE_URL}/users/${username}/recipes/${id}/versions/${commitHash}`);
+  return response.data;
+};
+
+// Restore a specific version of a recipe
+export const restoreRecipeVersion = async (username, id, commitHash, commitMessage) => {
+  const response = await axios.post(
+    `${API_BASE_URL}/users/${username}/recipes/${id}/restore/${commitHash}`, 
+    { commitMessage }
+  );
   return response.data;
 };
