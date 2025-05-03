@@ -33,6 +33,7 @@ export const AuthProvider = ({children}) => {
 
     const userRes = await axiosInstance.get("/api/user/profile/");
     setCurrentUser(userRes.data);
+    return userRes.data;
   };
 
   const logout = () => {

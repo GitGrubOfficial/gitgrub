@@ -10,7 +10,8 @@ function Register() {
   const [password1, setPassword1] = useState('');
   const [password2, setPassword2] = useState('');
   const [errorMsg, setErrorMsg] = useState('');
-  const { setUser } = useAuth();
+  const { login, user } = useAuth();
+
   const navigate = useNavigate();
 
   const handleRegister = async (e) => {
@@ -22,18 +23,6 @@ function Register() {
         password2,
       });
 
-
-      const loginRes = await axiosInstance.post('/api/auth/jwt/create/', {
-        email,
-        password: password1,
-      });
-
-
-      if (loginRes.data.is_complete) {
-        navigate('/recipes');
-      } else {
-        navigate('/complete-profile');
-      }
     } catch (err) {
       console.error(err);
       if (err.response?.data) {

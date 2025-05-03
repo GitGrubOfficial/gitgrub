@@ -14,6 +14,7 @@ export default function RecipeCreatePage() {
     servings: "",
     difficulty: "",
     diet_preference: "",
+    visibility: "",
     image: null,
   });
 

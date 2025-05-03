@@ -3,7 +3,7 @@ import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 
 function Login() {
-  const { login, user } = useAuth();
+  const { login, currentUser } = useAuth();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -13,9 +13,9 @@ function Login() {
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      await login(email, password); // use login from context
+      const user = await login(email, password); // use login from context
       setTimeout(() => {
-      if (user?.is_complete === false) {
+      if (user.is_complete === false) {
         navigate("/complete-profile");
       } else {
         navigate("/recipes");

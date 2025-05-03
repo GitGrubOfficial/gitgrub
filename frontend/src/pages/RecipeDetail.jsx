@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axiosInstance from '../api/axiosInstance';
 import { useAuth } from "../context/AuthContext";
+import recipeEditModal from "../components/ui/RecipeEditModal";
+import RecipeEditModal from "../components/ui/RecipeEditModal";
 
 
 
@@ -12,6 +14,8 @@ export default function RecipeDetailPage() {
   const navigate = useNavigate();
   const [selectedImage, setSelectedImage] = useState(null);
   const { currentUser } = useAuth();
+  const [showEditModal, setShowEditModal] = useState(false);
+
 
 
 
@@ -62,6 +66,21 @@ export default function RecipeDetailPage() {
 
   const isOwner = currentUser?.id === recipe.owner.id;
 
+  const refreshRecipe = async () => {
+  try {
+    const res = await axiosInstance.get(`/api/recipes/${id}/`);
+    const recipeData = res.data;
+    recipeData.images = [
+      recipeData.image,
+      "https://picsum.photos/200",
+      "https://picsum.photos/210",
+    ];
+    setRecipe(recipeData);
+  } catch (err) {
+    console.error("Failed to refresh recipe:", err);
+  }
+};
+
   return (
     <div className="max-w-6xl mx-auto p-6">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -106,7 +125,7 @@ export default function RecipeDetailPage() {
               {isOwner ? (
                 <button
                   className="bg-blue-500 text-white px-4 py-2 rounded"
-                  onClick={() => navigate(`/recipes/${id}/edit`)}
+                  onClick={() => setShowEditModal(true)}
                 >
                   Edit Recipe
                 </button>
@@ -151,6 +170,9 @@ export default function RecipeDetailPage() {
           </div>
         </div>
       </div>
+      {showEditModal && (<RecipeEditModal recipe={recipe} onClose={() => setShowEditModal(false)} onSave={() => { refreshRecipe(); setShowEditModal(false);}}
+  />
+)}
     </div>
   );
 }
