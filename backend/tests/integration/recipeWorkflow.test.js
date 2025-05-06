@@ -45,9 +45,9 @@ describe('Recipe Workflow Integration', () => {
       .expect(201);
 
     // Save recipe ID for subsequent tests
-    recipeId = response.body.id;
+    recipeId = response.body.recipeId;
 
-    expect(response.body).toHaveProperty('id');
+    expect(response.body).toHaveProperty('recipeId');
     expect(response.body).toHaveProperty('title', recipeData.title);
     expect(response.body).toHaveProperty('createdAt');
     expect(response.body).toHaveProperty('updatedAt');
@@ -77,7 +77,7 @@ describe('Recipe Workflow Integration', () => {
 
     expect(Array.isArray(response.body)).toBe(true);
     expect(response.body.length).toBe(1);
-    expect(response.body[0]).toHaveProperty('id', recipeId);
+    expect(response.body[0]).toHaveProperty('recipeId', recipeId);
   });
 
   // Test getting a specific recipe
@@ -86,7 +86,7 @@ describe('Recipe Workflow Integration', () => {
       .get(`/api/users/${USERNAME}/recipes/${recipeId}`)
       .expect(200);
 
-    expect(response.body).toHaveProperty('id', recipeId);
+    expect(response.body).toHaveProperty('recipeId', recipeId);
     expect(response.body).toHaveProperty('title', 'Test Recipe');
     expect(response.body).toHaveProperty('content', '# Test Recipe\n\nThis is a test recipe content.');
   });

@@ -92,7 +92,7 @@ const getAllRecipes = async (req, res, { baseDir }) => {
       
       if (metadata) {
         recipes.push({
-          id: recipeId,
+          recipeId,
           ...metadata
         });
       }
@@ -133,7 +133,7 @@ const createRecipe = async (req, res, { baseDir }) => {
     const metadata = await getRepoMetadata(repoPath, recipeId);
     
     res.status(201).json({
-      id: recipeId,
+      recipeId,
       ...metadata
     });
   } catch (error) {
@@ -145,7 +145,7 @@ const createRecipe = async (req, res, { baseDir }) => {
 // Get a specific recipe
 const getRecipe = async (req, res, { baseDir }) => {
   try {
-    const { username, id: recipeId } = req.params;
+    const { username, recipeId } = req.params;
     
     const repoPath = getRepoPath(baseDir, username, recipeId);
     if (!(await fs.pathExists(repoPath))) {
@@ -162,7 +162,7 @@ const getRecipe = async (req, res, { baseDir }) => {
     const metadata = await getRepoMetadata(repoPath, recipeId);
     
     res.json({
-      id: recipeId,
+      recipeId,
       ...metadata,
       content
     });
@@ -175,25 +175,25 @@ const getRecipe = async (req, res, { baseDir }) => {
 // Update a recipe
 const updateRecipe = async (req, res, { baseDir }) => {
   try {
-    const { username, id } = req.params;
+    const { username, recipeId } = req.params;
     const { title, content, commitMessage } = req.body;
     
-    const repoPath = getRepoPath(baseDir, username, id);
+    const repoPath = getRepoPath(baseDir, username, recipeId);
     if (!(await fs.pathExists(repoPath))) {
       return res.status(404).json({ message: 'Recipe not found' });
     }
     
-    const filePath = getRecipeFilePath(baseDir, username, id);
+    const filePath = getRecipeFilePath(baseDir, username, recipeId);
     await fs.writeFile(filePath, content);
     
     const git = simpleGit(repoPath);
     await git.add('./*');
     await git.commit(commitMessage || 'Update recipe');
     
-    const metadata = await getRepoMetadata(repoPath, id);
+    const metadata = await getRepoMetadata(repoPath, recipeId);
     
     res.json({
-      id,
+      recipeId,
       ...metadata,
       content
     });
@@ -206,9 +206,9 @@ const updateRecipe = async (req, res, { baseDir }) => {
 // Get recipe version history
 const getRecipeVersions = async (req, res, { baseDir }) => {
   try {
-    const { username, id } = req.params;
+    const { username, recipeId } = req.params;
     
-    const repoPath = getRepoPath(baseDir, username, id);
+    const repoPath = getRepoPath(baseDir, username, recipeId);
     if (!(await fs.pathExists(repoPath))) {
       return res.status(404).json({ message: 'Recipe not found' });
     }
@@ -233,9 +233,9 @@ const getRecipeVersions = async (req, res, { baseDir }) => {
 // Get a specific version of a recipe
 const getRecipeVersion = async (req, res, { baseDir }) => {
   try {
-    const { username, id, commitHash } = req.params;
+    const { username, recipeId, commitHash } = req.params;
     
-    const repoPath = getRepoPath(baseDir, username, id);
+    const repoPath = getRepoPath(baseDir, username, recipeId);
     if (!(await fs.pathExists(repoPath))) {
       return res.status(404).json({ message: 'Recipe not found' });
     }
@@ -258,10 +258,10 @@ const getRecipeVersion = async (req, res, { baseDir }) => {
     
     const [hash, author, date, message] = commitInfo.trim().split('\n');
     
-    const title = extractTitleFromContent(content) || id;
+    const title = extractTitleFromContent(content) || recipeId;
     
     res.json({
-      id,
+      recipeId,
       title,
       commitHash,
       author,
@@ -277,10 +277,10 @@ const getRecipeVersion = async (req, res, { baseDir }) => {
 
 const restoreRecipeVersion = async (req, res, { baseDir }) => {
   try {
-    const { username, id, commitHash } = req.params;
+    const { username, recipeId, commitHash } = req.params;
     const { commitMessage } = req.body;
     
-    const repoPath = getRepoPath(baseDir, username, id);
+    const repoPath = getRepoPath(baseDir, username, recipeId);
     if (!(await fs.pathExists(repoPath))) {
       return res.status(404).json({ message: 'Recipe not found' });
     }
@@ -295,16 +295,16 @@ const restoreRecipeVersion = async (req, res, { baseDir }) => {
     
     const content = await git.show([`${commitHash}:${recipeFileName}`]);
     
-    const filePath = getRecipeFilePath(baseDir, username, id);
+    const filePath = getRecipeFilePath(baseDir, username, recipeId);
     await fs.writeFile(filePath, content);
     
     await git.add('./*');
     await git.commit(commitMessage || `Restored from version ${commitHash.substring(0, 7)}`);
     
-    const metadata = await getRepoMetadata(repoPath, id);
+    const metadata = await getRepoMetadata(repoPath, recipeId);
     
     res.json({
-      id,
+      recipeId,
       ...metadata,
       content
     });
@@ -335,11 +335,11 @@ const setupApp = (config = {}) => {
   // Setup routes
   app.get('/api/users/:username/recipes', (req, res) => getAllRecipes(req, res, context));
   app.post('/api/users/:username/recipes', (req, res) => createRecipe(req, res, context));
-  app.get('/api/users/:username/recipes/:id', (req, res) => getRecipe(req, res, context));
-  app.put('/api/users/:username/recipes/:id', (req, res) => updateRecipe(req, res, context));
-  app.get('/api/users/:username/recipes/:id/versions', (req, res) => getRecipeVersions(req, res, context));
-  app.get('/api/users/:username/recipes/:id/versions/:commitHash', (req, res) => getRecipeVersion(req, res, context));
-  app.post('/api/users/:username/recipes/:id/restore/:commitHash', (req, res) => restoreRecipeVersion(req, res, context));
+  app.get('/api/users/:username/recipes/:recipeId', (req, res) => getRecipe(req, res, context));
+  app.put('/api/users/:username/recipes/:recipeId', (req, res) => updateRecipe(req, res, context));
+  app.get('/api/users/:username/recipes/:recipeId/versions', (req, res) => getRecipeVersions(req, res, context));
+  app.get('/api/users/:username/recipes/:recipeId/versions/:commitHash', (req, res) => getRecipeVersion(req, res, context));
+  app.post('/api/users/:username/recipes/:recipeId/restore/:commitHash', (req, res) => restoreRecipeVersion(req, res, context));
   
   // Make context accessible for testing
   app.locals.context = context;
