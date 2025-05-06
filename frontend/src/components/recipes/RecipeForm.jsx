@@ -1,7 +1,8 @@
 // frontend/src/components/recipes/RecipeForm.jsx
-import React, { useState, useEffect } from 'react';
+import React, { generatePath, useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { createRecipe } from '../../services/recipeService';
+import { ROUTES } from '../../routes';
 
 const RecipeForm = () => {
   const navigate = useNavigate();
@@ -52,7 +53,7 @@ const RecipeForm = () => {
   };
 
   const handleCancel = () => {
-    navigate(`/users/${username}/recipes`);
+    navigate(generatePath(ROUTES.RECIPE_LIST, { username }));
   };
 
   const handleSubmit = async (e) => {

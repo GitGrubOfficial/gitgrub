@@ -1,7 +1,8 @@
 // frontend/src/components/recipes/RecipeList.jsx
 import React, { useState, useEffect } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { generatePath, Link, useParams } from 'react-router-dom';
 import { getAllRecipes } from '../../services/recipeService';
+import { ROUTES } from '../../routes';
 
 const RecipeList = () => {
   const { username = 'demo' } = useParams();
@@ -31,7 +32,7 @@ const RecipeList = () => {
   return (
     <div className="list-container">
       <h2>{username}'s Recipes</h2>
-      <Link to={`/users/${username}/recipes/new`} className="btn btn-primary">Create New Recipe</Link>
+      <Link to={generatePath(ROUTES.RECIPE_NEW, { username })} className="btn btn-primary">Create New Recipe</Link>
       
       {recipes.length === 0 ? (
         <p>No recipes found. Create one to get started!</p>
@@ -42,7 +43,7 @@ const RecipeList = () => {
               <h3>{recipe.title}</h3>
               <p>Last updated: {new Date(recipe.updatedAt).toLocaleString()}</p>
               <div className="recipe-actions">
-                <Link to={`/users/${username}/recipes/${recipe.id}`} className="btn btn-secondary">View Recipe</Link>
+                <Link to={generatePath(ROUTES.RECIPE_VIEW, { username, recipeId: recipe.id })} className="btn btn-secondary">View Recipe</Link>
               </div>
             </div>
           ))}

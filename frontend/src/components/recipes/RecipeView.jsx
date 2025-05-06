@@ -1,11 +1,12 @@
 // frontend/src/components/recipes/RecipeView.jsx
 import React, { useState, useEffect } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, generatePath } from 'react-router-dom';
+import { ROUTES } from '../../routes';
 import { getRecipe } from '../../services/recipeService';
 import MarkdownRenderer from '../common/MarkdownRenderer';
 
 const RecipeView = () => {
-  const { username, id } = useParams();
+  const { username, recipeId } = useParams();
   const [recipe, setRecipe] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -13,7 +14,7 @@ const RecipeView = () => {
   useEffect(() => {
     const fetchRecipe = async () => {
       try {
-        const data = await getRecipe(username, id);
+        const data = await getRecipe(username, recipeId);
         setRecipe(data);
         setLoading(false);
       } catch (err) {
@@ -24,7 +25,7 @@ const RecipeView = () => {
     };
 
     fetchRecipe();
-  }, [username, id]);
+  }, [username, recipeId]);
 
   if (loading) return <div className="loading-spinner"></div>;
   if (error) return <div className="view-container"><p>Error: {error}</p></div>;
@@ -38,13 +39,13 @@ const RecipeView = () => {
       </div>
       
       <div className="recipe-actions">
-        <Link to={`/users/${username}/recipes`} className="btn">
+        <Link to={generatePath(ROUTES.RECIPE_LIST, { username })} className="btn">
           Back to List
         </Link>
-        <Link to={`/users/${username}/recipes/${id}/edit`} className="btn btn-primary">
+        <Link to={generatePath(ROUTES.RECIPE_EDIT, { username, recipeId })} className="btn btn-primary">
           Edit Recipe
         </Link>
-        <Link to={`/users/${username}/recipes/${id}/history`} className="btn btn-secondary">
+        <Link to={generatePath(ROUTES.RECIPE_VERSIONS, { username, recipeId })} className="btn btn-secondary">
           Version History
         </Link>
       </div>

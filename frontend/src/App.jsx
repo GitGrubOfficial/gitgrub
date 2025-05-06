@@ -2,6 +2,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import './App.css';
+import { ROUTES } from './routes';
 
 // Components
 import RecipeList from './components/recipes/RecipeList';
@@ -26,28 +27,25 @@ function App() {
             <Route path="/" element={<Navigate to="/users/demo/recipes" />} />
             
             {/* Recipe list */}
-            <Route path="/users/:username/recipes" element={<RecipeList />} />
+            <Route path={ROUTES.RECIPE_LIST} element={<RecipeList />} />
             
             {/* Create new recipe */}
-            <Route path="/users/:username/recipes/new" element={<RecipeForm />} />
+            <Route path={ROUTES.RECIPE_NEW} element={<RecipeForm />} />
             
             {/* View recipe */}
-            <Route path="/users/:username/recipes/:id" element={<RecipeView />} />
+            <Route path={ROUTES.RECIPE_VIEW} element={<RecipeView />} />
             
             {/* Edit recipe */}
-            <Route path="/users/:username/recipes/:id/edit" element={<RecipeEditForm />} />
+            <Route path={ROUTES.RECIPE_EDIT} element={<RecipeEditForm />} />
             
             {/* Recipe version history */}
-            <Route path="/users/:username/recipes/:id/history" element={<RecipeHistory />} />
+            <Route path={ROUTES.RECIPE_VERSIONS} element={<RecipeHistory />} />
             
             {/* View specific version */}
-            <Route path="/users/:username/recipes/:id/versions/:commitHash" element={<RecipeVersionView />} />
+            <Route path={ROUTES.RECIPE_VERSION_VIEW} element={<RecipeVersionView />} />
             
             {/* Restore specific version - redirects to edit form pre-filled with that version */}
-            <Route 
-              path="/users/:username/recipes/:id/restore/:commitHash" 
-              element={<RecipeVersionView />} 
-            />
+            <Route path={ROUTES.RECIPE_RESTORE} element={<RecipeVersionView />} />
           </Routes>
         </main>
         

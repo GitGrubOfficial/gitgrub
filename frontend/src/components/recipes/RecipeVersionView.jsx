@@ -1,11 +1,12 @@
 // frontend/src/components/recipes/RecipeVersionView.jsx
 import React, { useState, useEffect } from 'react';
-import { useParams, Link, useNavigate } from 'react-router-dom';
+import { generatePath, useParams, Link, useNavigate } from 'react-router-dom';
 import { getRecipeVersion, restoreRecipeVersion } from '../../services/recipeService';
 import MarkdownRenderer from '../common/MarkdownRenderer';
+import { ROUTES } from '../../routes';
 
 const RecipeVersionView = () => {
-  const { username, id, commitHash } = useParams();
+  const { username, recipeId, commitHash } = useParams();
   const navigate = useNavigate();
   const [recipe, setRecipe] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -15,7 +16,7 @@ const RecipeVersionView = () => {
   useEffect(() => {
     const fetchVersion = async () => {
       try {
-        const data = await getRecipeVersion(username, id, commitHash);
+        const data = await getRecipeVersion(username, recipeId, commitHash);
         setRecipe(data);
         setLoading(false);
       } catch (err) {
@@ -26,7 +27,7 @@ const RecipeVersionView = () => {
     };
 
     fetchVersion();
-  }, [username, id, commitHash]);
+  }, [username, recipeId, commitHash]);
 
   const handleRestore = async () => {
     if (!recipe) return;
@@ -34,8 +35,8 @@ const RecipeVersionView = () => {
     setRestoring(true);
     try {
       const commitMessage = `Restored from version ${commitHash.substring(0, 7)}`;
-      await restoreRecipeVersion(username, id, commitHash, commitMessage);
-      navigate(`/users/${username}/recipes/${id}`);
+      await restoreRecipeVersion(username, recipeId, commitHash, commitMessage);
+      navigate(generatePath(ROUTES.RECIPE_VIEW, { username, recipeId }));
     } catch (err) {
       console.error('Error restoring version:', err);
       setError(`Failed to restore version: ${err.message || 'Unknown error'}`);
@@ -58,10 +59,10 @@ const RecipeVersionView = () => {
       </div>
       
       <div className="recipe-actions">
-        <Link to={`/users/${username}/recipes/${id}`} className="btn">
+        <Link to={generatePath(ROUTES.RECIPE_VIEW, { username, recipeId })} className="btn">
           Back to Latest
         </Link>
-        <Link to={`/users/${username}/recipes/${id}/history`} className="btn btn-secondary">
+        <Link to={generatePath(ROUTES.RECIPE_VERSIONS, { username, recipeId })} className="btn btn-secondary">
           Version History
         </Link>
         <button 

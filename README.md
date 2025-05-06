@@ -48,6 +48,12 @@ This will:
 - Start the development environment
 - Connect you to an interactive shell inside the container
 
+### Run Tests
+Integration tests currently exist for `backend`.
+
+`cd backend`
+`npm run test:integration`
+
 ## Development Workflow
 
 Once inside the container:
@@ -73,13 +79,13 @@ Once inside the container:
    docker exec -it gitgrub-dev bash
    
    # Start the backend
-   npm run server
+   npm run dev
    ```
    
    **Option 2: Run in a single terminal with background processes**
    ```bash
    # Start backend in background
-   npm run server &
+   npm run dev &
    
    # Start frontend
    npm run dev
