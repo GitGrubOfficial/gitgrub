@@ -1,11 +1,12 @@
 // frontend/src/components/recipes/RecipeEditForm.jsx
 import React, { useState, useEffect } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { generatePath, useNavigate, useParams } from 'react-router-dom';
 import { getRecipe, updateRecipe } from '../../services/recipeService';
+import { ROUTES } from '../../routes';
 
 const RecipeEditForm = () => {
   const navigate = useNavigate();
-  const { username, id } = useParams();
+  const { username, recipeId } = useParams();
   
   const [recipe, setRecipe] = useState({
     title: '',
@@ -31,7 +32,7 @@ const RecipeEditForm = () => {
   useEffect(() => {
     const fetchRecipe = async () => {
       try {
-        const data = await getRecipe(username, id);
+        const data = await getRecipe(username, recipeId);
         
         // Extract title from content if present
         const contentTitle = extractTitleFromContent(data.content);
@@ -54,7 +55,7 @@ const RecipeEditForm = () => {
     };
 
     fetchRecipe();
-  }, [username, id]);
+  }, [username, recipeId]);
 
   // Update title in content when title field changes
   useEffect(() => {
@@ -107,7 +108,7 @@ const RecipeEditForm = () => {
   };
 
   const handleCancel = () => {
-    navigate(`/users/${username}/recipes/${id}`);
+    navigate(generatePath(ROUTES.RECIPE_VIEW, { username, recipeId }));
   };
 
   const handleSubmit = async (e) => {
@@ -140,9 +141,9 @@ const RecipeEditForm = () => {
         commitMessage
       };
       
-      await updateRecipe(username, id, recipeData);
+      await updateRecipe(username, recipeId, recipeData);
       
-      navigate(`/users/${username}/recipes/${id}`);
+      navigate(generatePath(ROUTES.RECIPE_VIEW, { username, recipeId }));
     } catch (err) {
       console.error('Error updating recipe:', err);
       setError(`Failed to update recipe: ${err.message || 'Unknown error'}`);

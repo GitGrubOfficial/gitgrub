@@ -1,10 +1,11 @@
 // frontend/src/components/recipes/RecipeHistory.jsx
 import React, { useState, useEffect } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { generatePath, Link, useParams } from 'react-router-dom';
 import { getRecipeVersions } from '../../services/recipeService';
+import { ROUTES } from '../../routes';
 
 const RecipeHistory = () => {
-  const { username, id } = useParams();
+  const { username, recipeId } = useParams();
   const [history, setHistory] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -12,7 +13,7 @@ const RecipeHistory = () => {
   useEffect(() => {
     const fetchHistory = async () => {
       try {
-        const data = await getRecipeVersions(username, id);
+        const data = await getRecipeVersions(username, recipeId);
         setHistory(data);
         setLoading(false);
       } catch (err) {
@@ -23,7 +24,7 @@ const RecipeHistory = () => {
     };
 
     fetchHistory();
-  }, [username, id]);
+  }, [username, recipeId]);
 
   if (loading) return <div className="loading-spinner"></div>;
   if (error) return <div className="history-container"><p>Error: {error}</p></div>;
@@ -33,7 +34,7 @@ const RecipeHistory = () => {
       <h2>Version History</h2>
       
       <div className="recipe-actions">
-        <Link to={`/users/${username}/recipes/${id}`} className="btn">
+        <Link to={generatePath(ROUTES.RECIPE_VIEW, {username, recipeId})} className="btn">
           Back to Recipe
         </Link>
       </div>
@@ -52,13 +53,11 @@ const RecipeHistory = () => {
                 </p>
               </div>
               <div className="version-actions">
-                <Link to={`/users/${username}/recipes/${id}/versions/${version.hash}`} 
-                      className="btn btn-secondary">
+                <Link to={generatePath(ROUTES.RECIPE_VERSION_VIEW, {username, recipeId, commitHash: version.hash})} className="btn btn-secondary">
                   View
                 </Link>
                 {index !== 0 && (
-                  <Link to={`/users/${username}/recipes/${id}/restore/${version.hash}`} 
-                        className="btn">
+                  <Link to={generatePath(ROUTES.RECIPE_RESTORE, {username, recipeId, commitHash: version.hash})} className="btn">
                     Restore
                   </Link>
                 )}
