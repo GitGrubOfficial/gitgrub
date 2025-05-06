@@ -39,11 +39,11 @@ const RecipeList = () => {
       ) : (
         <div className="recipe-list">
           {recipes.map(recipe => (
-            <div className="recipe-item" key={recipe.id}>
+            <div className="recipe-item" key={recipe.recipeId}>
               <h3>{recipe.title}</h3>
               <p>Last updated: {new Date(recipe.updatedAt).toLocaleString()}</p>
               <div className="recipe-actions">
-                <Link to={generatePath(ROUTES.RECIPE_VIEW, { username, recipeId: recipe.id })} className="btn btn-secondary">View Recipe</Link>
+                <Link to={generatePath(ROUTES.RECIPE_VIEW, { username, recipeId: recipe.recipeId })} className="btn btn-secondary">View Recipe</Link>
               </div>
             </div>
           ))}

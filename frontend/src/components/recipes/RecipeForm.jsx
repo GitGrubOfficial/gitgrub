@@ -88,7 +88,7 @@ const RecipeForm = () => {
       
       const newRecipe = await createRecipe(username, recipeData);
       
-      navigate(`/users/${username}/recipes/${newRecipe.id}`);
+      navigate(`/users/${username}/recipes/${newRecipe.recipeId}`);
     } catch (err) {
       console.error('Error creating recipe:', err);
       setError(`Failed to save recipe: ${err.message || 'Unknown error'}`);
@@ -108,7 +108,7 @@ const RecipeForm = () => {
           <label htmlFor="title">Recipe Title</label>
           <input
             type="text"
-            id="title"
+            recipeId="title"
             name="title"
             value={recipe.title}
             onChange={handleChange}
@@ -120,7 +120,7 @@ const RecipeForm = () => {
         <div className="form-group">
           <label htmlFor="content">Recipe Content (Markdown)</label>
           <textarea
-            id="content"
+            recipeId="content"
             name="content"
             value={recipe.content}
             onChange={handleChange}
@@ -132,7 +132,7 @@ const RecipeForm = () => {
           <label htmlFor="commitMessage">Commit Message</label>
           <input
             type="text"
-            id="commitMessage"
+            recipeId="commitMessage"
             value={commitMessage}
             onChange={(e) => setCommitMessage(e.target.value)}
             placeholder="Initial recipe creation"
