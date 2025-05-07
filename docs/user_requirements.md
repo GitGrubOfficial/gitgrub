@@ -4,48 +4,38 @@
 
 ### Now
 
-1. As a user, I want streamlined authentication options, including
-   one-time codes or social logins (Google/Facebook/Apple), to minimize
-   friction during signup and login.
-2. As a registered user, I want to log in to my account so that I can
-   access my saved recipes and preferences.
-3. As a user, I want to reset my password if I forget it so that I can
-   regain access to my account.
-4. As a user, I want to log out of my account so that I can keep my
-   information secure when using shared devices.
-5. As a home cook, I want to record my recipe in a structured format so
-   that I can preserve it accurately for future use.
-6. As a recipe creator, I want to update the ingredients or instructions
-   of my existing recipes so that I can improve them over time.
-7. As a recipe owner, I want to delete my recipes so that I can remove
-   content I no longer wish to share.
-8. As an innovative chef, I want to fork an existing recipe and modify
-   it so that I can create my own version while maintaining attribution
-   to the original.
-9. As a recipe developer, I want to track the evolution of my recipe
-   through multiple iterations so that I can see how it has changed over
-   time.
-10. As a host, I want to easily scale a recipe for different party sizes
-    so that I can prepare the right amount of food without recalculating
-    manually.
-11. As an international user, I want to toggle between metric and
-    imperial units so that I can follow recipes regardless of their
-    origin.
-12. As a precise baker, I want to convert volume measurements to weight
-    so that I can achieve more consistent results.
-13. As a user, I want to set my preferred measurement units
-    (metric/imperial) at the profile level, which will be applied as the
-    default for all recipes I view, while still having the option to
-    toggle between unit systems for any individual recipe as needed.
+1. As a user, I want streamlined authentication options, including one-time codes or social logins (Google/Facebook/Apple), to minimize friction during signup and login.
+2. As a registered user, I want to log in to my account so that I can access my saved recipes and preferences.
+3. As a user, I want to reset my password if I forget it so that I can regain access to my account.
+4. As a user, I want to log out of my account so that I can keep my information secure when using shared devices.
+5. As a home cook, I want to record my recipe in a structured format so that I can preserve it accurately for future use.
+6. As a recipe creator, I want to update the ingredients or instructions of my existing recipes so that I can improve them over time.
+7. As an innovative chef, I want to fork an existing recipe and modify it so that I can create my own version while maintaining attribution to the original.
+8. As a recipe developer, I want to track the evolution of my recipe through multiple iterations so that I can see how it has changed over time.
+9. As a host, I want to easily scale a recipe for different party sizes so that I can prepare the right amount of food without recalculating manually.
+12. As a user browsing recipes, I want to "favorite" recipes I'm interested in so that I can quickly find and access them later without having to search again.
+13. As a community member, I want to comment on a recipe so that I can share my experience, offer modifications, and build collaborative knowledge around dishes.
+14. As a community member, I want to upvote or downvote comments so that the most helpful feedback rises to the top and improves everyone's cooking experience.
+15. As a community member, I want to rate recipes I've tried so that I can provide feedback and help others find quality content.
+16. As a recipe creator, I want an intelligent autocomplete feature when entering ingredients so that I can save time, maintain consistent naming conventions, and improve searchability across the platform.
+17. As a recipe creator, I want an intuitive workflow for adding amounts and units to ingredients so that my recipes can be precisely scaled by users, ensuring consistent results regardless of serving size.
+18. As a user browsing recipes, I want to see high-quality thumbnails and photos of dishes so that I can visually assess recipes and make quicker, more confident decisions about what to cook.
+19. As a user browsing recipes, I want access to a diverse catalog of at least 100 initial recipes across multiple categories to make the platform immediately useful and engaging.
 
 ### Next
 
 1. As a user planning a dinner, I want to search for recipes based on
    specific criteria (ingredients, time, cuisine) so that I can find the
    perfect dish for my needs.
-2. As a user browsing recipes, I want to "favorite" recipes I'm
-   interested in so that I can quickly find and access them later
-   without having to search again.
+10. As an international user, I want to toggle between metric and
+    imperial units so that I can follow recipes regardless of their
+    origin.
+11. As a precise baker, I want to convert volume measurements to weight
+    so that I can achieve more consistent results.
+13. As a user, I want to set my preferred measurement units
+    (metric/imperial) at the profile level, which will be applied as the
+    default for all recipes I view, while still having the option to
+    toggle between unit systems for any individual recipe as needed.
 3. As a user developing new recipes, I want to make certain recipes
    private so that I can work on them before sharing them publicly.
 4. As a recipe creator, I want to tag my recipes with relevant
@@ -88,6 +78,8 @@
 19. As a curious cook, I want to see a visualization of all recipes
     forked from an original so that I can understand how it has evolved
     across the community.
+7. As a recipe owner, I want to delete my recipes so that I can remove
+   content I no longer wish to share.
 
 ### Later
 
@@ -115,8 +107,6 @@
    worked or failed so that I can learn from previous attempts.
 10. As a cooking enthusiast, I want to find and compare similar recipes
     so that I can understand different approaches to the same dish.
-11. As a community member, I want to rate recipes I've tried so that I
-    can provide feedback and help others find quality content.
 12. As a seasonal cook, I want to track when ingredients are in season
     and find relevant recipes so that I can cook with fresh, timely
     produce.
