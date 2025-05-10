@@ -93,5 +93,5 @@ graph TD
     class recipeDate,userName,userEmail,userPhone,quantity,recipeTitle,stepText,tagName,tagCategory,ingredientName,unit,weightEquivalent,servingSize,isPublic,preferredUnits,passwordHash,versionNumber,versionDate,changeDescription,provider,externalId,lastLogin,fromUnit,toUnit,conversionFactor,tempUnitPreference,expirationTime,metricUnit,displayUnit attribute
     class recipeId,ingredientId,userId,tagId,stepNumber,versionId,authId,conversionId keyAttribute
     class MANAGES,REQUIRES,CONSISTS_OF,HAS_TAG,HAS_TAG2,FORKED_FROM,HAS_VERSION,HAS_AUTH,CONVERTS_TO relationship
-    class ,HAS_TEMP_PREF,HAS_SESSION identifyingRelationship
+    class HAS_TEMP_PREF,HAS_SESSION identifyingRelationship
 ```
