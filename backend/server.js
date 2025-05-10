@@ -407,10 +407,66 @@ const getForkInfo = async (req, res, { baseDir }) => {
   }
 };
 
+// TEMPORARY FOR FORKING FUNCTIONALITY - Create a test user with fixed recipes
+const setupTestUser = async (baseDir) => {
+  try {
+    const testUsername = 'test_user';
+    const userPath = getUserReposPath(baseDir, testUsername);
+    await fs.ensureDir(userPath);
+    
+    const sampleRecipes = [
+      {
+        id: 'chocolate-cake',
+        title: 'Chocolate Cake',
+        content: `# Chocolate Cake\n\nA delicious chocolate cake recipe.\n\n## Ingredients\n\n- 2 cups flour\n- 2 cups sugar\n- 3/4 cup cocoa powder\n- 2 tsp baking soda\n- 1 tsp salt\n- 2 eggs\n- 1 cup buttermilk\n- 1/2 cup vegetable oil\n- 2 tsp vanilla extract\n- 1 cup hot coffee\n\n## Instructions\n\n1. Preheat oven to 350°F (175°C)\n2. Mix dry ingredients\n3. Add wet ingredients and mix well\n4. Pour into pans and bake for 30-35 minutes`
+      },
+      {
+        id: 'banana-bread',
+        title: 'Banana Bread',
+        content: `# Banana Bread\n\nClassic banana bread recipe.\n\n## Ingredients\n\n- 3 ripe bananas\n- 1/3 cup melted butter\n- 1 tsp baking soda\n- Pinch of salt\n- 3/4 cup sugar\n- 1 large egg\n- 1 tsp vanilla extract\n- 1 1/2 cups flour\n\n## Instructions\n\n1. Preheat oven to 350°F (175°C)\n2. Mash bananas and mix with melted butter\n3. Mix in other ingredients\n4. Pour into loaf pan and bake for 50-60 minutes`
+      }
+    ];
+    
+    for (const recipe of sampleRecipes) {
+      const repoPath = getRepoPath(baseDir, testUsername, recipe.id);
+      
+      if (await fs.pathExists(repoPath)) {
+        console.log(`Recipe ${recipe.id} already exists for ${testUsername}, skipping`);
+        continue;
+      }
+      
+      await fs.ensureDir(repoPath);
+      
+      const git = simpleGit(repoPath);
+      await git.init();
+      await git.addConfig('user.name', testUsername);
+      await git.addConfig('user.email', 'test@example.com');
+      
+      const filePath = getRecipeFilePath(baseDir, testUsername, recipe.id);
+      await fs.writeFile(filePath, recipe.content);
+      
+      await git.add('./*');
+      await git.commit('Initial recipe');
+    }
+    
+    console.log(`Test user '${testUsername}' created with sample recipes`);
+  } catch (error) {
+    console.error('Error setting up test user:', error);
+  }
+};
+
 const setupApp = (config = {}) => {
   const app = express();
   
   const baseDir = config.reposDir || path.join(__dirname, 'git-repos');
+
+  // THIS IS TEMPORARY FOR DEMOING FORKING BEFORE WE HAVE ADDED USER MANAGEMENT SYSTEM
+  if (process.env.NODE_ENV !== 'test') {
+    const demoUserPath = getUserReposPath(baseDir, 'demo');
+    fs.ensureDir(demoUserPath);
+    
+    setupTestUser(baseDir);
+  }
   
   // Setup middleware
   app.use(cors());

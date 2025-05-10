@@ -8,5 +8,3 @@ export const ROUTES = {
     RECIPE_VERSION_VIEW: '/users/:username/recipes/:recipeId/versions/:commitHash',
     RECIPE_RESTORE: '/users/:username/recipes/:recipeId/restore/:commitHash',
   };
-
-  // <Link to={generatePath(ROUTES.RECIPE_EDIT, { username, recipeId })} className="btn btn-primary">
