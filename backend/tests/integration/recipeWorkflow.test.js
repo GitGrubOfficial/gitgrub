@@ -6,31 +6,34 @@ const simpleGit = require('simple-git');
 
 const setupApp = require('../../server');
 
+const TEST_REPOS_DIR = path.join(__dirname, 'git-repos-test');
+const USERNAME = 'testuser';
+const FORK_USERNAME = 'forkuser';
+let app;
+let recipeId;
+let forkedRecipeId;
+
+beforeAll(async () => {
+  // Clear and recreate test directory
+  await fs.remove(TEST_REPOS_DIR);
+  await fs.ensureDir(TEST_REPOS_DIR);
+  
+  // Create the app with test configuration
+  app = setupApp({
+    reposDir: TEST_REPOS_DIR
+  });
+  
+  // Ensure both user directories exist
+  await fs.ensureDir(path.join(TEST_REPOS_DIR, USERNAME));
+  await fs.ensureDir(path.join(TEST_REPOS_DIR, FORK_USERNAME));
+});
+
+afterAll(async () => {
+  // Remove test directory
+  await fs.remove(TEST_REPOS_DIR);
+});
+
 describe('Recipe Workflow Integration', () => {
-  let app;
-  const TEST_REPOS_DIR = path.join(__dirname, 'git-repos-test');
-  const USERNAME = 'testuser';
-  let recipeId;
-
-  beforeAll(async () => {
-    // Clear and recreate test directory
-    await fs.remove(TEST_REPOS_DIR);
-    await fs.ensureDir(TEST_REPOS_DIR);
-    
-    // Create the app with test configuration
-    app = setupApp({
-      reposDir: TEST_REPOS_DIR
-    });
-    
-    // Ensure test user directory exists
-    await fs.ensureDir(path.join(TEST_REPOS_DIR, USERNAME));
-  });
-
-  afterAll(async () => {
-    // Remove test directory
-    await fs.remove(TEST_REPOS_DIR);
-  });
-
   // Test creating a new recipe
   test('should create a new recipe', async () => {
     const recipeData = {
@@ -168,5 +171,118 @@ describe('Recipe Workflow Integration', () => {
     await request(app)
       .get(`/api/users/${USERNAME}/recipes/nonexistentid`)
       .expect(404);
+  });
+});
+
+// Test forking functionality
+describe('Recipe Forking', () => {
+  const FORK_USERNAME = 'forkuser';
+  let forkedRecipeId;
+  
+  beforeAll(async () => {
+    // Ensure fork user directory exists
+    await fs.ensureDir(path.join(TEST_REPOS_DIR, FORK_USERNAME));
+  });
+  
+  // Test forking a recipe
+  test('should fork a recipe from another user', async () => {
+    const forkData = {
+      commitMessage: 'Forked from testuser'
+    };
+    
+    const response = await request(app)
+      .post(`/api/users/${FORK_USERNAME}/fork/${USERNAME}/${recipeId}`)
+      .send(forkData)
+      .expect(201);
+    
+    // Save forked recipe ID for subsequent tests
+    forkedRecipeId = response.body.recipeId;
+    
+    expect(response.body).toHaveProperty('recipeId');
+    expect(response.body).toHaveProperty('title', 'Updated Test Recipe');
+    expect(response.body).toHaveProperty('content', '# Updated Test Recipe\n\nThis content has been updated.');
+    expect(response.body).toHaveProperty('forkedFrom');
+    expect(response.body.forkedFrom).toHaveProperty('username', USERNAME);
+    expect(response.body.forkedFrom).toHaveProperty('recipeId', recipeId);
+    
+    // Verify the forked file was created
+    const repoPath = path.join(TEST_REPOS_DIR, FORK_USERNAME, forkedRecipeId);
+    const filePath = path.join(repoPath, 'recipe.md');
+    
+    expect(await fs.pathExists(filePath)).toBe(true);
+    
+    // Verify git repository was initialized
+    const git = simpleGit(repoPath);
+    const isRepo = await git.checkIsRepo();
+    expect(isRepo).toBe(true);
+    
+    // Verify commit was made
+    const log = await git.log();
+    expect(log.total).toBe(1);
+    expect(log.latest.message).toBe(forkData.commitMessage);
+    
+    // Verify remote was set up
+    const remotes = await git.getRemotes(true);
+    const upstream = remotes.find(remote => remote.name === 'upstream');
+    expect(upstream).toBeTruthy();
+    
+    // Check the path points to the original recipe
+    const relativePath = upstream.refs.fetch;
+    expect(relativePath).toContain(USERNAME);
+    expect(relativePath).toContain(recipeId);
+  });
+  
+  // Test getting fork information
+  test('should get fork information', async () => {
+    const response = await request(app)
+      .get(`/api/users/${FORK_USERNAME}/recipes/${forkedRecipeId}/fork-info`)
+      .expect(200);
+    
+    expect(response.body).toHaveProperty('isFork', true);
+    expect(response.body).toHaveProperty('forkedFrom');
+    expect(response.body.forkedFrom).toHaveProperty('username', USERNAME);
+    expect(response.body.forkedFrom).toHaveProperty('recipeId', recipeId);
+  });
+  
+  // Test fork information for a non-fork
+  test('should indicate when a recipe is not a fork', async () => {
+    const response = await request(app)
+      .get(`/api/users/${USERNAME}/recipes/${recipeId}/fork-info`)
+      .expect(200);
+    
+    expect(response.body).toHaveProperty('isFork', false);
+  });
+  
+  // Test making changes to a forked recipe
+  test('should allow updating a forked recipe', async () => {
+    const updateData = {
+      title: 'Forked Recipe with Changes',
+      content: '# Forked Recipe with Changes\n\nI modified this recipe after forking it.',
+      commitMessage: 'Customize forked recipe'
+    };
+    
+    const response = await request(app)
+      .put(`/api/users/${FORK_USERNAME}/recipes/${forkedRecipeId}`)
+      .send(updateData)
+      .expect(200);
+    
+    expect(response.body).toHaveProperty('title', updateData.title);
+    expect(response.body).toHaveProperty('content', updateData.content);
+    
+    // Verify file was updated
+    const filePath = path.join(TEST_REPOS_DIR, FORK_USERNAME, forkedRecipeId, 'recipe.md');
+    const content = await fs.readFile(filePath, 'utf8');
+    expect(content).toBe(updateData.content);
+    
+    // Verify commit was made
+    const git = simpleGit(path.join(TEST_REPOS_DIR, FORK_USERNAME, forkedRecipeId));
+    const log = await git.log();
+    expect(log.total).toBe(2);
+    expect(log.latest.message).toBe(updateData.commitMessage);
+    
+    // Verify the original recipe is unchanged
+    const originalFilePath = path.join(TEST_REPOS_DIR, USERNAME, recipeId, 'recipe.md');
+    const originalContent = await fs.readFile(originalFilePath, 'utf8');
+    expect(originalContent).toBe('# Updated Test Recipe\n\nThis content has been updated.');
   });
 });

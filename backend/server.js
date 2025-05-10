@@ -314,6 +314,99 @@ const restoreRecipeVersion = async (req, res, { baseDir }) => {
   }
 };
 
+// Fork a recipe from another user
+const forkRecipe = async (req, res, { baseDir }) => {
+  try {
+    const { sourceUsername, sourceRecipeId } = req.params;
+    const { username } = req.params; // Target username (who's forking)
+    const { commitMessage } = req.body;
+    
+    const sourceRepoPath = getRepoPath(baseDir, sourceUsername, sourceRecipeId);
+    if (!(await fs.pathExists(sourceRepoPath))) {
+      return res.status(404).json({ message: 'Source recipe not found' });
+    }
+    
+    const forkedRecipeId = crypto.randomUUID();
+    const targetRepoPath = getRepoPath(baseDir, username, forkedRecipeId);
+    
+    const userPath = getUserReposPath(baseDir, username);
+    await fs.ensureDir(userPath);
+    
+    await fs.ensureDir(targetRepoPath);
+    const git = simpleGit(targetRepoPath);
+    await git.init();
+    await git.addConfig('user.name', username);
+    await git.addConfig('user.email', 'poc@example.com');
+    
+    const sourceFilePath = getRecipeFilePath(baseDir, sourceUsername, sourceRecipeId);
+    const targetFilePath = getRecipeFilePath(baseDir, username, forkedRecipeId);
+    await fs.copy(sourceFilePath, targetFilePath);
+    
+    await git.add('./*');
+    await git.commit(commitMessage || `Forked from ${sourceUsername}'s recipe`);
+    
+    // Set up the remote to point to the original recipe
+    // Calculate the relative path from target to source
+    const remoteUrl = path.relative(targetRepoPath, sourceRepoPath);
+    await git.addRemote('upstream', remoteUrl);
+    
+    const content = await fs.readFile(targetFilePath, 'utf8');
+    const metadata = await getRepoMetadata(targetRepoPath, forkedRecipeId);
+    
+    res.status(201).json({
+      recipeId: forkedRecipeId,
+      ...metadata,
+      content,
+      forkedFrom: {
+        username: sourceUsername,
+        recipeId: sourceRecipeId
+      }
+    });
+  } catch (error) {
+    console.error('Error forking recipe:', error);
+    res.status(500).json({ message: 'Failed to fork recipe', error: error.message });
+  }
+};
+
+// Get fork information (to check if a recipe is a fork and from where)
+const getForkInfo = async (req, res, { baseDir }) => {
+  try {
+    const { username, recipeId } = req.params;
+    
+    const repoPath = getRepoPath(baseDir, username, recipeId);
+    if (!(await fs.pathExists(repoPath))) {
+      return res.status(404).json({ message: 'Recipe not found' });
+    }
+    
+    const git = simpleGit(repoPath);
+    
+    // Check if this repo has an upstream remote
+    const remotes = await git.getRemotes(true);
+    const upstream = remotes.find(remote => remote.name === 'upstream');
+    
+    if (!upstream) {
+      return res.json({ isFork: false });
+    }
+    
+    // Parse the remote URL to get the original recipe info
+    // The URL is a relative path like "../../sourceUsername/sourceRecipeId"
+    const parts = upstream.refs.fetch.split(path.sep);
+    const sourceRecipeId = parts[parts.length - 1];
+    const sourceUsername = parts[parts.length - 2];
+    
+    return res.json({ 
+      isFork: true,
+      forkedFrom: {
+        username: sourceUsername,
+        recipeId: sourceRecipeId
+      }
+    });
+  } catch (error) {
+    console.error('Error getting fork info:', error);
+    res.status(500).json({ message: 'Failed to get fork info', error: error.message });
+  }
+};
+
 const setupApp = (config = {}) => {
   const app = express();
   
@@ -340,6 +433,8 @@ const setupApp = (config = {}) => {
   app.get('/api/users/:username/recipes/:recipeId/versions', (req, res) => getRecipeVersions(req, res, context));
   app.get('/api/users/:username/recipes/:recipeId/versions/:commitHash', (req, res) => getRecipeVersion(req, res, context));
   app.post('/api/users/:username/recipes/:recipeId/restore/:commitHash', (req, res) => restoreRecipeVersion(req, res, context));
+  app.post('/api/users/:username/fork/:sourceUsername/:sourceRecipeId', (req, res) => forkRecipe(req, res, context));
+  app.get('/api/users/:username/recipes/:recipeId/fork-info', (req, res) => getForkInfo(req, res, context));
   
   // Make context accessible for testing
   app.locals.context = context;
