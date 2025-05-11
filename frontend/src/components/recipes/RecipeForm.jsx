@@ -108,7 +108,7 @@ const RecipeForm = () => {
           <label htmlFor="title">Recipe Title</label>
           <input
             type="text"
-            recipeId="title"
+            id="title"
             name="title"
             value={recipe.title}
             onChange={handleChange}
