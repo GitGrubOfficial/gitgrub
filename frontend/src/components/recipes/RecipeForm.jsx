@@ -132,7 +132,7 @@ const RecipeForm = () => {
           <label htmlFor="commitMessage">Commit Message</label>
           <input
             type="text"
-            recipeId="commitMessage"
+            id="commitMessage"
             value={commitMessage}
             onChange={(e) => setCommitMessage(e.target.value)}
             placeholder="Initial recipe creation"
