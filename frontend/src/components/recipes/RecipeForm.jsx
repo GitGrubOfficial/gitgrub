@@ -120,7 +120,7 @@ const RecipeForm = () => {
         <div className="form-group">
           <label htmlFor="content">Recipe Content (Markdown)</label>
           <textarea
-            recipeId="content"
+            id="content"
             name="content"
             value={recipe.content}
             onChange={handleChange}
