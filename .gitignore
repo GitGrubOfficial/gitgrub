@@ -23,6 +23,15 @@ dist-ssr
 *.sln
 *.sw?
 
+# Cache files
+.vite/
+.cache/
+.temp/
+.parcel-cache/
+.eslintcache
+.stylelintcache
+.turbo
+
 # Project specific
 **/git-repos/*
 temp*
