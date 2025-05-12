@@ -48,19 +48,13 @@ This will:
 - Start the development environment
 - Connect you to an interactive shell inside the container
 
-### Run Tests
-Integration tests currently exist for `backend`.
-
-`cd backend`
-`npm run test:integration`
-
 ## Development Workflow
 
 Once inside the container:
 
 1. Install dependencies (first time only):
    ```bash
-   npm install
+   ./install-dependencies.sh
    ```
 
 2. Start the development servers:
@@ -70,6 +64,7 @@ Once inside the container:
    In the first terminal (already connected via start-dev.sh):
    ```bash
    # Start the frontend
+   cd frontend
    npm run dev
    ```
    
@@ -79,6 +74,7 @@ Once inside the container:
    docker exec -it gitgrub-dev bash
    
    # Start the backend
+   cd backend
    npm run dev
    ```
    
@@ -108,6 +104,12 @@ Once inside the container:
 3. Access the application:
    - Frontend (Vite): http://localhost:5173
    - Backend API: http://localhost:3001
+
+### Run Tests
+Integration tests currently exist for `backend`.
+
+`cd backend`
+`npm run test:integration`
 
 ### File Structure
 
