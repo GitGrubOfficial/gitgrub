@@ -85,83 +85,7 @@ Part of the development will be evolving the data structure from the current mar
 - No recipe metadata in PostgreSQL for MVP (will be added later as traffic grows)
 - Git repositories will remain the source of truth for recipes
 
-## 5. Backlog Organization by Epic
-
-### 5.1 Foundation & Data Model
-
-| ID | User Story | Priority | Status |
-|----|------------|----------|--------|
-| | As a developer, I need a well-defined database schema for users to support authentication and preferences. | Must Have | Not Started |
-| | As a developer, I need a structured JSON schema for recipe content to support advanced features like ingrdient scaling. | Must Have | Not Started |
-| | As a developer, I need unit and integration tests for the data model to ensure reliability. | Should Have | Not Started |
-| | As a developer, I need a standardized ingredient naming and categorization system to support recipe search and filtering. | Should Have | Not Started |
-| | As a developer, I need a schema validation mechanism to ensure recipe JSON structure remains consistent. | Nice to Have| Not Started |
-
-### 5.2 User Authentication & Account Management
-
-| ID | User Story | Priority | Status |
-|----|------------|----------|--------|
-| | As a user, I want streamlined authentication options, including one-time codes or social logins (Google/Facebook/Apple), to minimize friction during signup and login. | Nice to Have | Not Started |
-| | As a registered user, I want to log in to my account so that I can access my saved recipes and preferences. | Must Have | Not Started |
-| | As a user, I want to reset my password if I forget it so that I can regain access to my account. | Must Have | Not Started |
-| | As a user, I want to log out of my account so that I can keep my information secure when using shared devices. | Must Have | Not Started |
-
-### 5.3 Recipe Management
-
-| ID | User Story | Priority | Status |
-|----|------------|----------|--------|
-| | As a home cook, I want to record my recipe in a structured format so that I can preserve it accurately for future use. | Must Have | Partially Implemented |
-| | As a recipe creator, I want to update the ingredients or instructions of my existing recipes so that I can improve them over time. | Must Have | Partially Implemented |
-| | As a recipe developer, I want to track the evolution of my recipe through multiple iterations so that I can see how it has changed over time. | Must Have | Partially Implemented |
-| | As an innovative chef, I want to fork an existing recipe and modify it so that I can create my own version while maintaining attribution to the original. | Must Have | Partially Implemented |
-
-### 5.4 Recipe Utility Features
-
-| ID | User Story | Priority | Status |
-|----|------------|----------|--------|
-| | As a host, I want to easily scale a recipe for different party sizes so that I can prepare the right amount of food without recalculating manually. | Must Have | Not Started |
-| | As a recipe creator, I want an intelligent autocomplete feature when entering ingredients so that I can save time, maintain consistent naming conventions, and improve searchability across the platform. | Nice to Have | Not Started |
-| | As a recipe creator, I want an intuitive workflow for adding amounts and units to ingredients so that my recipes can be precisely scaled by users.| Should have | Not Started |
-
-### 5.5 Community & Social Features
-
-| ID | User Story | Priority | Status |
-|----|------------|----------|--------|
-| | As a user browsing recipes, I want to "favorite" recipes I'm interested in so that I can quickly find and access them later without having to search again. | Must Have | Not Started |
-| | As a community member, I want to comment on a recipe so that I can share my experience, offer modifications, and collaborate. | Must Have | Not Started |
-| | As a community member, I want to upvote or downvote comments so that the most helpful feedback rises to the top and improves everyone's cooking experience. | Must Have | Not Started |
-| | As a community member, I want to rate recipes I've tried so that I can provide feedback and help others find quality content. | Must Have | Not Started |
-| | As a user, I want a homepage that displays top-rated and recently updated recipes so I can discover popular content without searching. | Must Have | Not Started |
-
-### 5.6 User Interface & Experience
-
-| ID | User Story | Priority | Status |
-|----|------------|----------|--------|
-| | As a user browsing recipes, I want to see high-quality thumbnails and photos of dishes so that I can visually assess recipes and make quicker, more confident decisions about what to cook. | Must Have | Not Started |
-| | As a user browsing recipes, I want access to a diverse catalog of at least 100 initial recipes across multiple categories to make the platform immediately useful and engaging. | Must Have | Not Started |
-
-### 5.7 DevOps & Infrastructure (Identified Gap)
-
-| ID | User Story | Priority | Status |
-|----|------------|----------|--------|
-| | As a developer, I need a local development environment with Docker to ensure consistency across team members. | Must Have | Partially Implemented |
-| | As a developer, I need a deployment process for the local server to easily update the application. | Must Have | Not Started |
-| | As a system administrator, I need a backup strategy for Git repositories to prevent data loss. | Must Have | Not Started |
-| | As a system administrator, I need basic monitoring for the self-hosted server to ensure reliability. | Should Have | Not Started |
-| | As a developer, I need integration tests that can be run locally to maintain code quality. | Should Have | Not Started |
-| | As a developer, I need to configure Nginx as a reverse proxy to properly route traffic between frontend, backend, and static assets. | Must Have | Not Started |
-| | As a developer, I need updated Dockerfiles and docker-compose configurations for production deployment. | Must Have | Not Started |
-| | As a system administrator, I need documented procedures for server setup and maintenance. | Should Have | Not Started |
-
-### 5.8 Security
-
-| ID | User Story | Priority | Status |
-|----|------------|----------|--------|
-| | As a user, I want my account and personal recipes to be secure from unauthorized access. | Must Have | Not Started |
-| | As a system administrator, I need proper input validation and sanitization to prevent injection attacks. | Must Have | Not Started |
-| | As a system administrator, I need proper authentication and authorization mechanisms to protect user data. | Must Have | Not Started |
-
-## 6. MVP Definition
+## 5. MVP Definition
 
 The Minimum Viable Product (MVP) consists of the core functionality needed to provide value to users while validating the product concept. The MVP includes:
 
@@ -185,44 +109,163 @@ The Minimum Viable Product (MVP) consists of the core functionality needed to pr
 - Containerized environments for consistent development and deployment
 - Basic monitoring and backup strategy for self-hosted deployment
 
-## 7. Development Phases
+## 6. High Level Roadmap
 
-The MVP will be delivered in 4 phases, with the following focus areas:
-
-### Phase 1: Foundation & Infrastructure
+### v0.1.0 - Technical Foundation
 
 - Define database schema for users (PostgreSQL)
 - Design JSON schema for recipe content
-- Set up local development environment with Docker
-- Implement security fundamentals for authentication
-
-### Phase 2: Core Functionality
-
-- Implement user authentication system
-- Update recipe creation and editing for structured JSON format
-- Enhance recipe versioning and forking
-- Implement recipe scaling functionality
-- Add image support for recipes
+- Convert existing markdown recipes to JSON format
+- Set up Docker development environment
+- Implement Nginx reverse proxy configuration
+- Create initial CI/CD pipeline
 - Set up automated backups for Git repositories
 
-### Phase 3: Social Features
+### **v0.2.0 - Core Recipe Management**
 
-- Implement favorites functionality
-- Add comments with upvoting/downvoting
-- Add recipe ratings
-- Optimize performance for Git-based recipe access
-- Set up basic monitoring for the server
+- Implement structured JSON format for recipes
+- Enhance recipe versioning with Git backend
+- Enhance recipe forking with attribution
+- Add recipe scaling functionality
+- Create UI components for structured recipe entry
+- Basic image support for recipes
+- Input validation for recipe structure
 
-### Phase 4: Polish & Content
+### **v0.3.0 - User Authentication**
 
-- Create diverse catalog of initial recipes
-- Implement comprehensive testing
-- Bug fixes and UX improvements
-- Performance optimization
+- Implement user registration and authentication
+- Add password reset functionality
+- Set up user profiles
+- Implement security fundamentals (input validation, sanitization)
+- Add proper authorization for recipe access
+- Configure secure session management
+- Documentation for user authentication flow
 
-## Phase 5: Stretch Goals
+### **v0.4.0 - MVP Release**
 
-- Add advanced ingredient features (autocomplete, unit conversion)
+- Ability to favorite recipes
+- Basic recipe search and filtering
+- Mobile-responsive UI
+- Basic monitoring for self-hosted deployment
+- Bug fixes and performance optimization
+- Complete test coverage for core functionality
+- Initial set of 25 recipes across categories
+
+### **v1.0.0 - Production Release**
+
+- Full catalog of 100+ initial recipes
+- Recipe comments functionality
+- Rating system for recipes
+- Performance optimization for Git-based recipe access
+- Enhanced error handling and logging
+- Complete user documentation
+- Production deployment guide for self-hosting
+
+### **v1.1.0 - Enhanced User Experience**
+
+- Enhanced image handling for recipes
+- Improved UI/UX with better navigation
+- Advanced recipe search capabilities
+- Recipe categorization and tagging system
+- Unit conversion functionality
+- Print-friendly recipe view
+- Recipe sharing functionality
+
+### **v1.2.0 - Community Features**
+
+- Comment voting system
+- User activity feeds
+- Favorite collections and organization
+- User notifications for recipe updates and comments
+- Enhanced user profiles
+- Recipe recommendation engine (basic)
+- Moderation tools for community content
+
+### **v2.0.0 - Advanced Platform**
+
+- Intelligent ingredient autocomplete
+- Meal planning functionality
+- Advanced analytics on recipe usage
+- Enhanced internationalization support
+- Integration with external recipe platforms
+- Shopping list generation
+- Mobile apps for iOS/Android
+
+## 7. Backlog Organization by Epic
+
+### 7.1 Foundation & Data Model
+
+| ID | User Story | Priority | Status |
+|----|------------|----------|--------|
+| | As a developer, I need a well-defined database schema for users to support authentication and preferences. | Must Have | Not Started |
+| | As a developer, I need a structured JSON schema for recipe content to support advanced features like ingrdient scaling. | Must Have | Not Started |
+| | As a developer, I need unit and integration tests for the data model to ensure reliability. | Should Have | Not Started |
+| | As a developer, I need a standardized ingredient naming and categorization system to support recipe search and filtering. | Should Have | Not Started |
+| | As a developer, I need a schema validation mechanism to ensure recipe JSON structure remains consistent. | Nice to Have| Not Started |
+
+### 7.2 User Authentication & Account Management
+
+| ID | User Story | Priority | Status |
+|----|------------|----------|--------|
+| | As a user, I want streamlined authentication options, including one-time codes or social logins (Google/Facebook/Apple), to minimize friction during signup and login. | Nice to Have | Not Started |
+| | As a registered user, I want to log in to my account so that I can access my saved recipes and preferences. | Must Have | Not Started |
+| | As a user, I want to reset my password if I forget it so that I can regain access to my account. | Must Have | Not Started |
+| | As a user, I want to log out of my account so that I can keep my information secure when using shared devices. | Must Have | Not Started |
+
+### 7.3 Recipe Management
+
+| ID | User Story | Priority | Status |
+|----|------------|----------|--------|
+| | As a home cook, I want to record my recipe in a structured format so that I can preserve it accurately for future use. | Must Have | Partially Implemented |
+| | As a recipe creator, I want to update the ingredients or instructions of my existing recipes so that I can improve them over time. | Must Have | Partially Implemented |
+| | As a recipe developer, I want to track the evolution of my recipe through multiple iterations so that I can see how it has changed over time. | Must Have | Partially Implemented |
+| | As an innovative chef, I want to fork an existing recipe and modify it so that I can create my own version while maintaining attribution to the original. | Must Have | Partially Implemented |
+
+### 7.4 Recipe Utility Features
+
+| ID | User Story | Priority | Status |
+|----|------------|----------|--------|
+| | As a host, I want to easily scale a recipe for different party sizes so that I can prepare the right amount of food without recalculating manually. | Must Have | Not Started |
+| | As a recipe creator, I want an intelligent autocomplete feature when entering ingredients so that I can save time, maintain consistent naming conventions, and improve searchability across the platform. | Nice to Have | Not Started |
+| | As a recipe creator, I want an intuitive workflow for adding amounts and units to ingredients so that my recipes can be precisely scaled by users.| Should have | Not Started |
+
+### 7.5 Community & Social Features
+
+| ID | User Story | Priority | Status |
+|----|------------|----------|--------|
+| | As a user browsing recipes, I want to "favorite" recipes I'm interested in so that I can quickly find and access them later without having to search again. | Must Have | Not Started |
+| | As a community member, I want to comment on a recipe so that I can share my experience, offer modifications, and collaborate. | Must Have | Not Started |
+| | As a community member, I want to upvote or downvote comments so that the most helpful feedback rises to the top and improves everyone's cooking experience. | Must Have | Not Started |
+| | As a community member, I want to rate recipes I've tried so that I can provide feedback and help others find quality content. | Must Have | Not Started |
+| | As a user, I want a homepage that displays top-rated and recently updated recipes so I can discover popular content without searching. | Must Have | Not Started |
+
+### 7.6 User Interface & Experience
+
+| ID | User Story | Priority | Status |
+|----|------------|----------|--------|
+| | As a user browsing recipes, I want to see high-quality thumbnails and photos of dishes so that I can visually assess recipes and make quicker, more confident decisions about what to cook. | Must Have | Not Started |
+| | As a user browsing recipes, I want access to a diverse catalog of at least 100 initial recipes across multiple categories to make the platform immediately useful and engaging. | Must Have | Not Started |
+
+### 7.7 DevOps & Infrastructure1
+
+| ID | User Story | Priority | Status |
+|----|------------|----------|--------|
+| | As a developer, I need a local development environment with Docker to ensure consistency across team members. | Must Have | Partially Implemented |
+| | As a developer, I need a deployment process for the local server to easily update the application. | Must Have | Not Started |
+| | As a system administrator, I need a backup strategy for Git repositories to prevent data loss. | Must Have | Not Started |
+| | As a system administrator, I need basic monitoring for the self-hosted server to ensure reliability. | Should Have | Not Started |
+| | As a developer, I need integration tests that can be run locally to maintain code quality. | Should Have | Not Started |
+| | As a developer, I need to configure Nginx as a reverse proxy to properly route traffic between frontend, backend, and static assets. | Must Have | Not Started |
+| | As a developer, I need updated Dockerfiles and docker-compose configurations for production deployment. | Must Have | Not Started |
+| | As a system administrator, I need documented procedures for server setup and maintenance. | Should Have | Not Started |
+
+### 7.8 Security
+
+| ID | User Story | Priority | Status |
+|----|------------|----------|--------|
+| | As a user, I want my account and personal recipes to be secure from unauthorized access. | Must Have | Not Started |
+| | As a system administrator, I need proper input validation and sanitization to prevent injection attacks. | Must Have | Not Started |
+| | As a system administrator, I need proper authentication and authorization mechanisms to protect user data. | Must Have | Not Started |
 
 ## 8. Technical Architecture Refinements
 
