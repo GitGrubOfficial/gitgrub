@@ -114,23 +114,32 @@ The Minimum Viable Product (MVP) consists of the core functionality needed to pr
 
 ### v0.1.0 - Technical Foundation
 
-- [ ] Define database schema for users (PostgreSQL)
-- [ ] Design JSON schema for recipe content
-- [ ] Convert existing markdown recipes to JSON format
+*Establish the development infrastructure and deployment foundation needed for all future work. No user-facing features yet.*
+
 - [ ] Set up Docker development environment
 - [ ] Implement Nginx reverse proxy configuration
 - [ ] Create initial CI/CD pipeline
-- [ ] Set up automated backups for Git repositories
 - [ ] Set up OpenTofu for infrastructure management
 - [ ] Define production environment structure for self-hosting with future cloud migration path
-- [ ] Implement comprehensive test strategy including unit and integration tests
+- [ ]  Set up testing infrastructure and TDD foundation:
+  - [ ] Configure Jest for backend unit testing
+  - [ ] Configure React Testing Library for frontend component testing
+  - [ ] Set up test database configuration for integration tests
+  - [ ] Integrate test runners into CI/CD pipeline
+  - [ ] Document TDD patterns and testing conventions
+  - [ ] Create example test structures for future development
 - [ ] Define schema validation mechanisms for recipe JSON structure
 - [ ] Create standardized ingredient naming and categorization taxonomy
-- [ ] Document security requirements for user authentication and data protection
 - [ ] Implement internationalization foundation with language-specific JSON files and key-based text retrieval system to support future language additions
+- [ ] Define user data interface/contract for future authentication system
 
 ### **v0.2.0 - Core Recipe Management**
 
+*Take GitGrub from proof-of-concept to structured recipe platform. Focus on recipe data architecture and core functionality without users.*
+
+- [ ] Design JSON schema for recipe content
+- [ ] Define schema validation mechanisms for recipe JSON structure
+- [ ] Convert existing markdown recipes to JSON format
 - [ ] Implement structured JSON format for recipes
 - [ ] Enhance recipe versioning with Git backend
 - [ ] Enhance recipe forking with attribution
@@ -147,9 +156,14 @@ The Minimum Viable Product (MVP) consists of the core functionality needed to pr
   - [ ] Recipe image gallery
   - [ ] Comments section
   - [ ] Recipe tagging system
+  - [ ] Implement mock user system using interfaces for development/testing
 
 ### **v0.3.0 - User Authentication**
 
+*Add user accounts and authentication to enable personal recipe ownership, privacy, and the foundation for community features.*
+
+- [ ] Define and implement PostgreSQL database schema for users
+- [ ] Set up PostgreSQL database connection and configuration
 - [ ] Implement user registration and authentication
 - [ ] Implement password reset flow and email verification
 - [ ] Set up user profiles
@@ -157,8 +171,12 @@ The Minimum Viable Product (MVP) consists of the core functionality needed to pr
 - [ ] Add proper authorization for recipe access
 - [ ] Configure secure session management
 - [ ] Documentation for user authentication flow
+- [ ] Migrate from mock user system to actual PostgreSQL-backed authentication
+- [ ] Document security requirements for user authentication and data protection
 
 ### **v0.4.0 - MVP Release**
+
+*Complete the minimum viable product with core community features and prepare for initial user testing and feedback.*
 
 - [ ] Rating system for recipes
 - [ ] Create homepage featuring top-rated and recently updated recipes
@@ -170,6 +188,8 @@ The Minimum Viable Product (MVP) consists of the core functionality needed to pr
 
 ### **v1.0.0 - Production Release**
 
+*Launch GitGrub as a fully-featured recipe platform ready for broader user adoption with comprehensive content and essential community features.*
+
 - [ ] Full catalog of 100+ initial recipes
 - [ ] Implement favorites system for users to bookmark recipes
 - [ ] Recipe comments functionality
@@ -177,8 +197,11 @@ The Minimum Viable Product (MVP) consists of the core functionality needed to pr
 - [ ] Enhanced error handling and logging
 - [ ] Complete user documentation
 - [ ] Production deployment guide for self-hosting
+- [ ] Set up automated backups for Git repositories
 
 ### **v1.1.0 - Enhanced User Experience**
+
+*Focus on improving the user interface, adding convenience features, and expanding platform capabilities to increase user engagement and satisfaction.*
 
 - [ ] Enhanced image handling for recipes
 - [ ] Improved UI/UX with better navigation
@@ -191,6 +214,8 @@ The Minimum Viable Product (MVP) consists of the core functionality needed to pr
 
 ### **v1.2.0 - Community Features**
 
+*Build out social and community aspects to push GitGrub from a recipe platform into an engaging culinary community with user interaction and content discovery.*
+
 - [ ] Build comment system with upvoting/downvoting capability
 - [ ] User activity feeds
 - [ ] Favorite collections and organization
@@ -200,6 +225,8 @@ The Minimum Viable Product (MVP) consists of the core functionality needed to pr
 - [ ] Moderation tools for community content
 
 ### **v2.0.0 - Advanced Platform**
+
+*Take GitGrub into a a more intricate ecosystem with intelligent features, meal planning capabilities, and integration with external services for a complete cooking experience.*
 
 - [ ] Advanced recipe search capabilities
 - [ ] Intelligent ingredient autocomplete
