@@ -117,10 +117,7 @@ The Minimum Viable Product (MVP) consists of the core functionality needed to pr
 *Establish the development infrastructure and deployment foundation needed for all future work. No user-facing features yet.*
 
 - [ ] Set up Docker development environment
-- [ ] Implement Nginx reverse proxy configuration
 - [ ] Create initial CI/CD pipeline
-- [ ] Set up OpenTofu for infrastructure management
-- [ ] Define production environment structure for self-hosting with future cloud migration path
 - [ ]  Set up testing infrastructure and TDD foundation:
   - [ ] Configure Jest for backend unit testing
   - [ ] Configure React Testing Library for frontend component testing
@@ -128,10 +125,13 @@ The Minimum Viable Product (MVP) consists of the core functionality needed to pr
   - [ ] Integrate test runners into CI/CD pipeline
   - [ ] Document TDD patterns and testing conventions
   - [ ] Create example test structures for future development
-- [ ] Define schema validation mechanisms for recipe JSON structure
-- [ ] Create standardized ingredient naming and categorization taxonomy
-- [ ] Implement internationalization foundation with language-specific JSON files and key-based text retrieval system to support future language additions
+- [ ] Set up OpenTofu for infrastructure management
+- [ ] Implement Nginx reverse proxy configuration
+- [ ] Define production environment structure for self-hosting with future cloud migration path
 - [ ] Define user data interface/contract for future authentication system
+- [ ] Define schema validation mechanisms for recipe JSON structure
+- [ ] Implement internationalization foundation with language-specific JSON files and key-based text retrieval system to support future language additions
+- [ ] Create standardized ingredient naming and categorization taxonomy
 
 ### **v0.2.0 - Core Recipe Management**
 
